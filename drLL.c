@@ -1,8 +1,11 @@
+/*406 Marcos Emigdio Ramírez Cerdán, Javier Moyano San Bruno
+100495884@alumnos.uc3m.es, 100499744@alumnos.uc3m.es*/
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
+// Referencia los números, los operadores y las variables
 #define T_NUMBER 	1001
 #define T_OPERATOR	1002		
 #define T_VARIABLE  1003  
@@ -53,7 +56,7 @@ int rd_lex ()
 {
 	int c ;
 	int cc ;
-	
+	// Salta espacios en blanco y cuenta las líneas para dar información
 	do {
 		c = getchar () ;
 		if (c == '\n')
