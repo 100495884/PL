@@ -126,17 +126,65 @@ void MatchSymbol (int expected_token)
 											/// The actual recomendation is to use MatchSymbol in the code rather than theese macros
 
 
-void ParseYourGrammar ()
-{
+void ParseExpression2(); // Prototipo de la función
+
+void ParseYourGrammar() {
+    if (tokens.token == '(') { 
+        MatchSymbol('(');
+        ParseExpression2();
+        MatchSymbol(')');
+    } else if (tokens.token == T_NUMBER) {  
+        printf("%d", tokens.number); 
+        MatchSymbol(T_NUMBER);
+    } else if (tokens.token == T_VARIABLE) { 
+        printf("%s", tokens.variable_name);
+        MatchSymbol(T_VARIABLE);
+    } else {
+        rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un número, variable o paréntesis de apertura.");
+    }
 }
 
+void ParseExpression2() {
+    if (tokens.token == T_OPERATOR) {
+        char operador = tokens.token_val;
+        MatchSymbol(T_OPERATOR);
+
+        // Imprimir paréntesis solo si es una expresión compuesta
+        printf("(");
+        ParseYourGrammar();
+        printf(" %c ", operador);
+        ParseYourGrammar();
+        printf(")");
+
+    } else if (tokens.token == '=') {
+        MatchSymbol('=');
+        
+        if (tokens.token == T_VARIABLE) {
+            printf("(%s = ", tokens.variable_name);
+            MatchSymbol(T_VARIABLE);
+
+            // Ver si lo que viene después de "=" necesita paréntesis
+            if (tokens.token == '(') {
+                ParseYourGrammar(); // Ya maneja los paréntesis internos
+            } else {
+                ParseYourGrammar();
+            }
+            printf(")");
+        } else {
+            rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba una variable después del signo '='.");
+        }
+    } else {
+        rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un operador o un signo '='.");
+    }
+}
 
 void ParseAxiom () 
 {									/// Axiom ::= \n
 	ParseYourGrammar () ;			/// Dummy Parser. Complete this with your design								
-	if (tokens.token == '\n') {	
+	if (tokens.token == '\n') {
+		printf ("\n") ; 	
 		MatchSymbol ('\n') ;
-		printf ("\n") ; 
+		
 	} else { 
 		rd_syntax_error (-1, tokens.token, "-- Unexpected Token (Expected:%d=None, Read:%d) at end of Parsing\n") ;
 	}
