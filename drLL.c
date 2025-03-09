@@ -173,7 +173,7 @@ void ParseExpresion() {
             printf("(%s = ", tokens.variable_name);
             MatchSymbol(T_VARIABLE);
 
-            // Verifica si lo que sigue es una expresión entre paréntesis
+            // Imprime la expresión que se asigna a la variable
             ParseYourGrammar();
 			// Imprime un paréntesis de cierre para la asignación
             printf(")");
