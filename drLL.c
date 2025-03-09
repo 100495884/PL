@@ -1,5 +1,5 @@
 /*406 Marcos Emigdio Ramírez Cerdán, Javier Moyano San Bruno
-100495884@alumnos.uc3m.es, 100499744@alumnos.uc3m.es*/
+100499744@alumnos.uc3m.es 100495884@alumnos.uc3m.es*/
 #include <ctype.h>
 #include <stdio.h>
 #include <string.h>
@@ -126,54 +126,68 @@ void MatchSymbol (int expected_token)
 											/// The actual recomendation is to use MatchSymbol in the code rather than theese macros
 
 
-void ParseExpression2(); // Prototipo de la función
+void ParseExpresion(); // Prototipo de la función
 
 void ParseYourGrammar() {
+	// Si el token es un paréntesis de apertura, se espera una expresión
     if (tokens.token == '(') { 
+		// Coincide con el paréntesis de apertura y avanza al siguiente token
         MatchSymbol('(');
-        ParseExpression2();
+		// Llama a la función ParseExpresion para que analice la expresión
+        ParseExpresion();
+		// Coincide con el paréntesis de cierre ')' y avanza al siguiente token
         MatchSymbol(')');
-    } else if (tokens.token == T_NUMBER) {  
+    } else if (tokens.token == T_NUMBER) {  // Verifica si el token actual es un número
         printf("%d", tokens.number); 
         MatchSymbol(T_NUMBER);
-    } else if (tokens.token == T_VARIABLE) { 
+    } else if (tokens.token == T_VARIABLE) { // Verifica si el token actual es una variable
         printf("%s", tokens.variable_name);
         MatchSymbol(T_VARIABLE);
     } else {
+		// Si no es ninguno de los casos anteriores, lanza un error de sintaxis
         rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un número, variable o paréntesis de apertura.");
     }
 }
 
-void ParseExpression2() {
+void ParseExpresion() {
+	// Verifica si el token actual es un operador
     if (tokens.token == T_OPERATOR) {
         char operador = tokens.token_val;
         MatchSymbol(T_OPERATOR);
 
         // Imprimir paréntesis solo si es una expresión compuesta
         printf("(");
+		// Procesa la primera expresión
         ParseYourGrammar();
         printf(" %c ", operador);
+		// Procesa la segunda expresión
         ParseYourGrammar();
+		// Imprime un paréntesis de cierre para la expresión compuesta
         printf(")");
 
-    } else if (tokens.token == '=') {
+    } else if (tokens.token == '=') { // Verifica si el token actual es un signo de igual '='
         MatchSymbol('=');
-        
+        // Verifica si el token actual es una variable
         if (tokens.token == T_VARIABLE) {
+			// Simepre imprimirá el paréntesis de apertura
             printf("(%s = ", tokens.variable_name);
             MatchSymbol(T_VARIABLE);
 
-            // Ver si lo que viene después de "=" necesita paréntesis
+            // Verifica si lo que sigue es una expresión entre paréntesis
             if (tokens.token == '(') {
                 ParseYourGrammar(); // Ya maneja los paréntesis internos
             } else {
+				// Procesa la expresión sin paréntesis
                 ParseYourGrammar();
             }
+			// Imprime un paréntesis de cierre para la asignación
             printf(")");
         } else {
+			// Si no es una variable, lanza un error de sintaxis
             rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba una variable después del signo '='.");
         }
     } else {
+		// Si no es una variable, lanza un error de sintaxis
         rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un operador o un signo '='.");
     }
 }
