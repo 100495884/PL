@@ -174,12 +174,7 @@ void ParseExpresion() {
             MatchSymbol(T_VARIABLE);
 
             // Verifica si lo que sigue es una expresión entre paréntesis
-            if (tokens.token == '(') {
-                ParseYourGrammar(); // Ya maneja los paréntesis internos
-            } else {
-				// Procesa la expresión sin paréntesis
-                ParseYourGrammar();
-            }
+            ParseYourGrammar();
 			// Imprime un paréntesis de cierre para la asignación
             printf(")");
         } else {
