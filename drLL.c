@@ -126,70 +126,95 @@ void MatchSymbol (int expected_token)
 											/// The actual recomendation is to use MatchSymbol in the code rather than theese macros
 
 
-void ParseExpresion(); // Prototipo de la función
+// Prototipos de las funciones
+void ParseExpresion();
+void ParseExpresion2();
+void ParseOperador();
+void ParseNumero();
+void ParseVariable();
 
-void ParseYourGrammar() {
-	// Si el token es un paréntesis de apertura, se espera una expresión
+// Función para procesar una expresión
+void ParseExpresion() {
     if (tokens.token == '(') { 
-		// Coincide con el paréntesis de apertura y avanza al siguiente token
+        // Si es un paréntesis de apertura, procesa una expresión compleja
         MatchSymbol('(');
-		// Llama a la función ParseExpresion para que analice la expresión
-        ParseExpresion();
-		// Coincide con el paréntesis de cierre ')' y avanza al siguiente token
+        ParseExpresion2();
         MatchSymbol(')');
-    } else if (tokens.token == T_NUMBER) {  // Verifica si el token actual es un número
-        printf("%d", tokens.number); 
-        MatchSymbol(T_NUMBER);
-    } else if (tokens.token == T_VARIABLE) { // Verifica si el token actual es una variable
-        printf("%s", tokens.variable_name);
-        MatchSymbol(T_VARIABLE);
+    } else if (tokens.token == T_NUMBER) {  
+        // Si es un número, procesa el número
+        ParseNumero();
+    } else if (tokens.token == T_VARIABLE) { 
+        // Si es una variable, procesa la variable
+        ParseVariable();
     } else {
-		// Si no es ninguno de los casos anteriores, lanza un error de sintaxis
+        // Si no es ninguna de las anteriores, lanza un error
         rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un número, variable o paréntesis de apertura.");
     }
 }
 
-void ParseExpresion() {
-	// Verifica si el token actual es un operador
+// Función para procesar una expresión compleja (Expression2)
+void ParseExpresion2() {
     if (tokens.token == T_OPERATOR) {
-        char operador = tokens.token_val;
-        MatchSymbol(T_OPERATOR);
-
-        // Imprimir paréntesis solo si es una expresión compuesta
+        // Si es un operador, procesa una operación
+        ParseOperador();
         printf("(");
-		// Procesa la primera expresión
-        ParseYourGrammar();
-        printf(" %c ", operador);
-		// Procesa la segunda expresión
-        ParseYourGrammar();
-		// Imprime un paréntesis de cierre para la expresión compuesta
+        ParseExpresion();  // Primer operando
+        printf(" %c ", tokens.old_token_val);  // Operador
+        ParseExpresion();  // Segundo operando
         printf(")");
-
-    } else if (tokens.token == '=') { // Verifica si el token actual es un signo de igual '='
+    } else if (tokens.token == '=') {
+        // Si es un signo de igual, procesa una asignación
         MatchSymbol('=');
-        // Verifica si el token actual es una variable
+		// Se espera una variable después del signo '='
         if (tokens.token == T_VARIABLE) {
-			// Simepre imprimirá el paréntesis de apertura
             printf("(%s = ", tokens.variable_name);
             MatchSymbol(T_VARIABLE);
-
-            // Imprime la expresión que se asigna a la variable
-            ParseYourGrammar();
-			// Imprime un paréntesis de cierre para la asignación
+            ParseExpresion();  // Expresión que se asigna
             printf(")");
         } else {
-			// Si no es una variable, lanza un error de sintaxis
             rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba una variable después del signo '='.");
         }
     } else {
-		// Si no es una variable, lanza un error de sintaxis
         rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un operador o un signo '='.");
+    }
+}
+
+// Función para procesar un operador
+void ParseOperador() {
+    if (tokens.token == T_OPERATOR) {
+        // Almacena el operador y avanza al siguiente token
+        tokens.old_token_val = tokens.token_val;
+        MatchSymbol(T_OPERATOR);
+    } else {
+        rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un operador.");
+    }
+}
+
+// Función para procesar un número
+void ParseNumero() {
+    if (tokens.token == T_NUMBER) {
+        // Imprime el número y avanza al siguiente token
+        printf("%d", tokens.number);
+        MatchSymbol(T_NUMBER);
+    } else {
+        rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba un número.");
+    }
+}
+
+// Función para procesar una variable
+void ParseVariable() {
+    if (tokens.token == T_VARIABLE) {
+        // Imprime el nombre de la variable y avanza al siguiente token
+        printf("%s", tokens.variable_name);
+        MatchSymbol(T_VARIABLE);
+    } else {
+        rd_syntax_error(-1, tokens.token, "ERROR: Se esperaba una variable.");
     }
 }
 
 void ParseAxiom () 
 {									/// Axiom ::= \n
-	ParseYourGrammar () ;			/// Dummy Parser. Complete this with your design								
+	ParseExpresion () ;			/// Dummy Parser. Complete this with your design								
 	if (tokens.token == '\n') {
 		printf ("\n") ; 	
 		MatchSymbol ('\n') ;
