@@ -1,0 +1,2671 @@
+Grammar
+
+    0 $accept: axioma $end
+
+    1 axioma: programa_principal
+
+    2 programa_principal: variables funciones
+    3                   | funciones
+
+    4 variables: variable variables
+    5          | variable
+
+    6 variable: INTEGER definicion ';'
+    7         | INTEGER definicion ',' definiciones ';'
+
+    8 funciones: funcion funciones
+    9          | main
+
+   10 $@1: ε
+
+   11 funcion: IDENTIF $@1 '(' parametros ')' '{' sentencias '}'
+
+   12 parametros: INTEGER IDENTIF ',' parametros
+   13           | INTEGER IDENTIF
+   14           | ε
+
+   15 $@2: ε
+
+   16 main: MAIN $@2 '(' ')' '{' sentencias '}'
+
+   17 sentencias: sentencia ';' sentencias
+   18           | sentencia ';'
+   19           | estructura sentencias
+   20           | estructura
+
+   21 sentencia: INTEGER definicion
+   22          | INTEGER definicion ',' definiciones
+   23          | IDENTIF '=' expresion
+   24          | IDENTIF '[' expresion ']' '=' expresion
+   25          | PRINTF '(' expresion ',' expresiones_print ')'
+   26          | PUTS '(' STRING ')'
+   27          | IDENTIF '(' parametros_extra ')'
+   28          | IDENTIF '(' ')'
+   29          | RETURN expresion
+   30          | '@' expresion
+   31          | '@' condicion
+
+   32 estructura: WHILE '(' condicion ')' '{' sentencias '}'
+   33           | IF '(' condicion ')' '{' sentencias_if '}'
+   34           | IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}'
+   35           | FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}'
+
+   36 sentencias_if: sentencia ';'
+   37              | estructura
+   38              | sentencia ';' sentencias
+   39              | estructura sentencias
+
+   40 contador_for: INTEGER IDENTIF
+   41             | INTEGER IDENTIF '=' termino
+   42             | IDENTIF '=' termino
+
+   43 incremento_decremento: IDENTIF '=' IDENTIF '+' NUMBER
+   44                      | IDENTIF '=' IDENTIF '-' NUMBER
+
+   45 definiciones: definicion ',' definiciones
+   46             | definicion
+
+   47 definicion: IDENTIF '=' termino
+   48           | IDENTIF
+   49           | IDENTIF '[' NUMBER ']'
+
+   50 expresiones_print: expresion ',' expresiones_print
+   51                  | expresion
+
+   52 expresion: termino
+   53          | expresion '+' expresion
+   54          | expresion '-' expresion
+   55          | expresion '*' expresion
+   56          | expresion '/' expresion
+   57          | expresion '%' expresion
+   58          | STRING
+   59          | IDENTIF '(' parametros_extra ')'
+   60          | IDENTIF '(' ')'
+   61          | IDENTIF '[' expresion ']'
+
+   62 parametros_extra: expresion ',' parametros_extra
+   63                 | expresion
+
+   64 condicion: expresion AND expresion
+   65          | expresion OR expresion
+   66          | expresion NEQ expresion
+   67          | expresion EQ expresion
+   68          | expresion '<' expresion
+   69          | expresion LEQ expresion
+   70          | expresion '>' expresion
+   71          | expresion GEQ expresion
+   72          | condicion AND condicion
+   73          | condicion OR condicion
+   74          | condicion NEQ condicion
+   75          | condicion EQ condicion
+   76          | condicion '<' condicion
+   77          | condicion LEQ condicion
+   78          | condicion '>' condicion
+   79          | condicion GEQ condicion
+
+   80 termino: operando
+   81        | '+' operando
+   82        | '-' operando
+
+   83 operando: IDENTIF
+   84         | NUMBER
+   85         | '(' expresion ')'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '%' (37) 57
+    '(' (40) 11 16 25 26 27 28 32 33 34 35 59 60 85
+    ')' (41) 11 16 25 26 27 28 32 33 34 35 59 60 85
+    '*' (42) 55
+    '+' (43) 43 53 81
+    ',' (44) 7 12 22 25 45 50 62
+    '-' (45) 44 54 82
+    '/' (47) 56
+    ';' (59) 6 7 17 18 35 36 38
+    '<' (60) 68 76
+    '=' (61) 23 24 41 42 43 44 47
+    '>' (62) 70 78
+    '@' (64) 30 31
+    '[' (91) 24 49 61
+    ']' (93) 24 49 61
+    '{' (123) 11 16 32 33 34 35
+    '}' (125) 11 16 32 33 34 35
+    error (256)
+    NUMBER (258) 43 44 49 84
+    IDENTIF (259) 11 12 13 23 24 27 28 40 41 42 43 44 47 48 49 59 60 61 83
+    INTEGER (260) 6 7 12 13 21 22 40 41
+    STRING (261) 26 58
+    MAIN (262) 16
+    WHILE (263) 32
+    PUTS (264) 26
+    PRINTF (265) 25
+    AND (266) 64 72
+    OR (267) 65 73
+    NEQ (268) 66 74
+    EQ (269) 67 75
+    LEQ (270) 69 77
+    GEQ (271) 71 79
+    IF (272) 33 34
+    ELSE (273) 34
+    FOR (274) 35
+    RETURN (275) 29
+    UNARY_SIGN (276)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (39)
+        on left: 0
+    axioma (40)
+        on left: 1
+        on right: 0
+    programa_principal (41)
+        on left: 2 3
+        on right: 1
+    variables (42)
+        on left: 4 5
+        on right: 2 4
+    variable (43)
+        on left: 6 7
+        on right: 4 5
+    funciones (44)
+        on left: 8 9
+        on right: 2 3 8
+    funcion (45)
+        on left: 11
+        on right: 8
+    $@1 (46)
+        on left: 10
+        on right: 11
+    parametros (47)
+        on left: 12 13 14
+        on right: 11 12
+    main (48)
+        on left: 16
+        on right: 9
+    $@2 (49)
+        on left: 15
+        on right: 16
+    sentencias (50)
+        on left: 17 18 19 20
+        on right: 11 16 17 19 32 35 38 39
+    sentencia (51)
+        on left: 21 22 23 24 25 26 27 28 29 30 31
+        on right: 17 18 36 38
+    estructura (52)
+        on left: 32 33 34 35
+        on right: 19 20 37 39
+    sentencias_if (53)
+        on left: 36 37 38 39
+        on right: 33 34
+    contador_for (54)
+        on left: 40 41 42
+        on right: 35
+    incremento_decremento (55)
+        on left: 43 44
+        on right: 35
+    definiciones (56)
+        on left: 45 46
+        on right: 7 22 45
+    definicion (57)
+        on left: 47 48 49
+        on right: 6 7 21 22 45 46
+    expresiones_print (58)
+        on left: 50 51
+        on right: 25 50
+    expresion (59)
+        on left: 52 53 54 55 56 57 58 59 60 61
+        on right: 23 24 25 29 30 50 51 53 54 55 56 57 61 62 63 64 65 66 67 68 69 70 71 85
+    parametros_extra (60)
+        on left: 62 63
+        on right: 27 59 62
+    condicion (61)
+        on left: 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79
+        on right: 31 32 33 34 35 72 73 74 75 76 77 78 79
+    termino (62)
+        on left: 80 81 82
+        on right: 41 42 47 52
+    operando (63)
+        on left: 83 84 85
+        on right: 80 81 82
+
+
+State 0
+
+    0 $accept: • axioma $end
+
+    IDENTIF  shift, and go to state 1
+    INTEGER  shift, and go to state 2
+    MAIN     shift, and go to state 3
+
+    axioma              go to state 4
+    programa_principal  go to state 5
+    variables           go to state 6
+    variable            go to state 7
+    funciones           go to state 8
+    funcion             go to state 9
+    main                go to state 10
+
+
+State 1
+
+   11 funcion: IDENTIF • $@1 '(' parametros ')' '{' sentencias '}'
+
+    $default  reduce using rule 10 ($@1)
+
+    $@1  go to state 11
+
+
+State 2
+
+    6 variable: INTEGER • definicion ';'
+    7         | INTEGER • definicion ',' definiciones ';'
+
+    IDENTIF  shift, and go to state 12
+
+    definicion  go to state 13
+
+
+State 3
+
+   16 main: MAIN • $@2 '(' ')' '{' sentencias '}'
+
+    $default  reduce using rule 15 ($@2)
+
+    $@2  go to state 14
+
+
+State 4
+
+    0 $accept: axioma • $end
+
+    $end  shift, and go to state 15
+
+
+State 5
+
+    1 axioma: programa_principal •
+
+    $default  reduce using rule 1 (axioma)
+
+
+State 6
+
+    2 programa_principal: variables • funciones
+
+    IDENTIF  shift, and go to state 1
+    MAIN     shift, and go to state 3
+
+    funciones  go to state 16
+    funcion    go to state 9
+    main       go to state 10
+
+
+State 7
+
+    4 variables: variable • variables
+    5          | variable •
+
+    INTEGER  shift, and go to state 2
+
+    $default  reduce using rule 5 (variables)
+
+    variables  go to state 17
+    variable   go to state 7
+
+
+State 8
+
+    3 programa_principal: funciones •
+
+    $default  reduce using rule 3 (programa_principal)
+
+
+State 9
+
+    8 funciones: funcion • funciones
+
+    IDENTIF  shift, and go to state 1
+    MAIN     shift, and go to state 3
+
+    funciones  go to state 18
+    funcion    go to state 9
+    main       go to state 10
+
+
+State 10
+
+    9 funciones: main •
+
+    $default  reduce using rule 9 (funciones)
+
+
+State 11
+
+   11 funcion: IDENTIF $@1 • '(' parametros ')' '{' sentencias '}'
+
+    '('  shift, and go to state 19
+
+
+State 12
+
+   47 definicion: IDENTIF • '=' termino
+   48           | IDENTIF •
+   49           | IDENTIF • '[' NUMBER ']'
+
+    '='  shift, and go to state 20
+    '['  shift, and go to state 21
+
+    $default  reduce using rule 48 (definicion)
+
+
+State 13
+
+    6 variable: INTEGER definicion • ';'
+    7         | INTEGER definicion • ',' definiciones ';'
+
+    ';'  shift, and go to state 22
+    ','  shift, and go to state 23
+
+
+State 14
+
+   16 main: MAIN $@2 • '(' ')' '{' sentencias '}'
+
+    '('  shift, and go to state 24
+
+
+State 15
+
+    0 $accept: axioma $end •
+
+    $default  accept
+
+
+State 16
+
+    2 programa_principal: variables funciones •
+
+    $default  reduce using rule 2 (programa_principal)
+
+
+State 17
+
+    4 variables: variable variables •
+
+    $default  reduce using rule 4 (variables)
+
+
+State 18
+
+    8 funciones: funcion funciones •
+
+    $default  reduce using rule 8 (funciones)
+
+
+State 19
+
+   11 funcion: IDENTIF $@1 '(' • parametros ')' '{' sentencias '}'
+
+    INTEGER  shift, and go to state 25
+
+    $default  reduce using rule 14 (parametros)
+
+    parametros  go to state 26
+
+
+State 20
+
+   47 definicion: IDENTIF '=' • termino
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 28
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    termino   go to state 32
+    operando  go to state 33
+
+
+State 21
+
+   49 definicion: IDENTIF '[' • NUMBER ']'
+
+    NUMBER  shift, and go to state 34
+
+
+State 22
+
+    6 variable: INTEGER definicion ';' •
+
+    $default  reduce using rule 6 (variable)
+
+
+State 23
+
+    7 variable: INTEGER definicion ',' • definiciones ';'
+
+    IDENTIF  shift, and go to state 12
+
+    definiciones  go to state 35
+    definicion    go to state 36
+
+
+State 24
+
+   16 main: MAIN $@2 '(' • ')' '{' sentencias '}'
+
+    ')'  shift, and go to state 37
+
+
+State 25
+
+   12 parametros: INTEGER • IDENTIF ',' parametros
+   13           | INTEGER • IDENTIF
+
+    IDENTIF  shift, and go to state 38
+
+
+State 26
+
+   11 funcion: IDENTIF $@1 '(' parametros • ')' '{' sentencias '}'
+
+    ')'  shift, and go to state 39
+
+
+State 27
+
+   84 operando: NUMBER •
+
+    $default  reduce using rule 84 (operando)
+
+
+State 28
+
+   83 operando: IDENTIF •
+
+    $default  reduce using rule 83 (operando)
+
+
+State 29
+
+   81 termino: '+' • operando
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 28
+    '('      shift, and go to state 31
+
+    operando  go to state 40
+
+
+State 30
+
+   82 termino: '-' • operando
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 28
+    '('      shift, and go to state 31
+
+    operando  go to state 41
+
+
+State 31
+
+   85 operando: '(' • expresion ')'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 44
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 32
+
+   47 definicion: IDENTIF '=' termino •
+
+    $default  reduce using rule 47 (definicion)
+
+
+State 33
+
+   80 termino: operando •
+
+    $default  reduce using rule 80 (termino)
+
+
+State 34
+
+   49 definicion: IDENTIF '[' NUMBER • ']'
+
+    ']'  shift, and go to state 46
+
+
+State 35
+
+    7 variable: INTEGER definicion ',' definiciones • ';'
+
+    ';'  shift, and go to state 47
+
+
+State 36
+
+   45 definiciones: definicion • ',' definiciones
+   46             | definicion •
+
+    ','  shift, and go to state 48
+
+    $default  reduce using rule 46 (definiciones)
+
+
+State 37
+
+   16 main: MAIN $@2 '(' ')' • '{' sentencias '}'
+
+    '{'  shift, and go to state 49
+
+
+State 38
+
+   12 parametros: INTEGER IDENTIF • ',' parametros
+   13           | INTEGER IDENTIF •
+
+    ','  shift, and go to state 50
+
+    $default  reduce using rule 13 (parametros)
+
+
+State 39
+
+   11 funcion: IDENTIF $@1 '(' parametros ')' • '{' sentencias '}'
+
+    '{'  shift, and go to state 51
+
+
+State 40
+
+   81 termino: '+' operando •
+
+    $default  reduce using rule 81 (termino)
+
+
+State 41
+
+   82 termino: '-' operando •
+
+    $default  reduce using rule 82 (termino)
+
+
+State 42
+
+   59 expresion: IDENTIF • '(' parametros_extra ')'
+   60          | IDENTIF • '(' ')'
+   61          | IDENTIF • '[' expresion ']'
+   83 operando: IDENTIF •
+
+    '('  shift, and go to state 52
+    '['  shift, and go to state 53
+
+    $default  reduce using rule 83 (operando)
+
+
+State 43
+
+   58 expresion: STRING •
+
+    $default  reduce using rule 58 (expresion)
+
+
+State 44
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   85 operando: '(' expresion • ')'
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+    ')'  shift, and go to state 59
+
+
+State 45
+
+   52 expresion: termino •
+
+    $default  reduce using rule 52 (expresion)
+
+
+State 46
+
+   49 definicion: IDENTIF '[' NUMBER ']' •
+
+    $default  reduce using rule 49 (definicion)
+
+
+State 47
+
+    7 variable: INTEGER definicion ',' definiciones ';' •
+
+    $default  reduce using rule 7 (variable)
+
+
+State 48
+
+   45 definiciones: definicion ',' • definiciones
+
+    IDENTIF  shift, and go to state 12
+
+    definiciones  go to state 60
+    definicion    go to state 36
+
+
+State 49
+
+   16 main: MAIN $@2 '(' ')' '{' • sentencias '}'
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    sentencias  go to state 70
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 50
+
+   12 parametros: INTEGER IDENTIF ',' • parametros
+
+    INTEGER  shift, and go to state 25
+
+    $default  reduce using rule 14 (parametros)
+
+    parametros  go to state 73
+
+
+State 51
+
+   11 funcion: IDENTIF $@1 '(' parametros ')' '{' • sentencias '}'
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    sentencias  go to state 74
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 52
+
+   59 expresion: IDENTIF '(' • parametros_extra ')'
+   60          | IDENTIF '(' • ')'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+    ')'      shift, and go to state 75
+
+    expresion         go to state 76
+    parametros_extra  go to state 77
+    termino           go to state 45
+    operando          go to state 33
+
+
+State 53
+
+   61 expresion: IDENTIF '[' • expresion ']'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 78
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 54
+
+   53 expresion: expresion '+' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 79
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 55
+
+   54 expresion: expresion '-' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 80
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 56
+
+   55 expresion: expresion '*' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 81
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 57
+
+   56 expresion: expresion '/' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 82
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 58
+
+   57 expresion: expresion '%' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 83
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 59
+
+   85 operando: '(' expresion ')' •
+
+    $default  reduce using rule 85 (operando)
+
+
+State 60
+
+   45 definiciones: definicion ',' definiciones •
+
+    $default  reduce using rule 45 (definiciones)
+
+
+State 61
+
+   23 sentencia: IDENTIF • '=' expresion
+   24          | IDENTIF • '[' expresion ']' '=' expresion
+   27          | IDENTIF • '(' parametros_extra ')'
+   28          | IDENTIF • '(' ')'
+
+    '='  shift, and go to state 84
+    '('  shift, and go to state 85
+    '['  shift, and go to state 86
+
+
+State 62
+
+   21 sentencia: INTEGER • definicion
+   22          | INTEGER • definicion ',' definiciones
+
+    IDENTIF  shift, and go to state 12
+
+    definicion  go to state 87
+
+
+State 63
+
+   32 estructura: WHILE • '(' condicion ')' '{' sentencias '}'
+
+    '('  shift, and go to state 88
+
+
+State 64
+
+   26 sentencia: PUTS • '(' STRING ')'
+
+    '('  shift, and go to state 89
+
+
+State 65
+
+   25 sentencia: PRINTF • '(' expresion ',' expresiones_print ')'
+
+    '('  shift, and go to state 90
+
+
+State 66
+
+   33 estructura: IF • '(' condicion ')' '{' sentencias_if '}'
+   34           | IF • '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}'
+
+    '('  shift, and go to state 91
+
+
+State 67
+
+   35 estructura: FOR • '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}'
+
+    '('  shift, and go to state 92
+
+
+State 68
+
+   29 sentencia: RETURN • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 93
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 69
+
+   30 sentencia: '@' • expresion
+   31          | '@' • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 94
+    condicion  go to state 95
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 70
+
+   16 main: MAIN $@2 '(' ')' '{' sentencias • '}'
+
+    '}'  shift, and go to state 96
+
+
+State 71
+
+   17 sentencias: sentencia • ';' sentencias
+   18           | sentencia • ';'
+
+    ';'  shift, and go to state 97
+
+
+State 72
+
+   19 sentencias: estructura • sentencias
+   20           | estructura •
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    $default  reduce using rule 20 (sentencias)
+
+    sentencias  go to state 98
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 73
+
+   12 parametros: INTEGER IDENTIF ',' parametros •
+
+    $default  reduce using rule 12 (parametros)
+
+
+State 74
+
+   11 funcion: IDENTIF $@1 '(' parametros ')' '{' sentencias • '}'
+
+    '}'  shift, and go to state 99
+
+
+State 75
+
+   60 expresion: IDENTIF '(' ')' •
+
+    $default  reduce using rule 60 (expresion)
+
+
+State 76
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   62 parametros_extra: expresion • ',' parametros_extra
+   63                 | expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+    ','  shift, and go to state 100
+
+    $default  reduce using rule 63 (parametros_extra)
+
+
+State 77
+
+   59 expresion: IDENTIF '(' parametros_extra • ')'
+
+    ')'  shift, and go to state 101
+
+
+State 78
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   61          | IDENTIF '[' expresion • ']'
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+    ']'  shift, and go to state 102
+
+
+State 79
+
+   53 expresion: expresion • '+' expresion
+   53          | expresion '+' expresion •
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 53 (expresion)
+
+
+State 80
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   54          | expresion '-' expresion •
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 54 (expresion)
+
+
+State 81
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   55          | expresion '*' expresion •
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    $default  reduce using rule 55 (expresion)
+
+
+State 82
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   56          | expresion '/' expresion •
+   57          | expresion • '%' expresion
+
+    $default  reduce using rule 56 (expresion)
+
+
+State 83
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   57          | expresion '%' expresion •
+
+    $default  reduce using rule 57 (expresion)
+
+
+State 84
+
+   23 sentencia: IDENTIF '=' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 103
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 85
+
+   27 sentencia: IDENTIF '(' • parametros_extra ')'
+   28          | IDENTIF '(' • ')'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+    ')'      shift, and go to state 104
+
+    expresion         go to state 76
+    parametros_extra  go to state 105
+    termino           go to state 45
+    operando          go to state 33
+
+
+State 86
+
+   24 sentencia: IDENTIF '[' • expresion ']' '=' expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 106
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 87
+
+   21 sentencia: INTEGER definicion •
+   22          | INTEGER definicion • ',' definiciones
+
+    ','  shift, and go to state 107
+
+    $default  reduce using rule 21 (sentencia)
+
+
+State 88
+
+   32 estructura: WHILE '(' • condicion ')' '{' sentencias '}'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 109
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 89
+
+   26 sentencia: PUTS '(' • STRING ')'
+
+    STRING  shift, and go to state 110
+
+
+State 90
+
+   25 sentencia: PRINTF '(' • expresion ',' expresiones_print ')'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 111
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 91
+
+   33 estructura: IF '(' • condicion ')' '{' sentencias_if '}'
+   34           | IF '(' • condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 112
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 92
+
+   35 estructura: FOR '(' • contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}'
+
+    IDENTIF  shift, and go to state 113
+    INTEGER  shift, and go to state 114
+
+    contador_for  go to state 115
+
+
+State 93
+
+   29 sentencia: RETURN expresion •
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 29 (sentencia)
+
+
+State 94
+
+   30 sentencia: '@' expresion •
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   64 condicion: expresion • AND expresion
+   65          | expresion • OR expresion
+   66          | expresion • NEQ expresion
+   67          | expresion • EQ expresion
+   68          | expresion • '<' expresion
+   69          | expresion • LEQ expresion
+   70          | expresion • '>' expresion
+   71          | expresion • GEQ expresion
+
+    AND  shift, and go to state 116
+    OR   shift, and go to state 117
+    NEQ  shift, and go to state 118
+    EQ   shift, and go to state 119
+    LEQ  shift, and go to state 120
+    GEQ  shift, and go to state 121
+    '<'  shift, and go to state 122
+    '>'  shift, and go to state 123
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 30 (sentencia)
+
+
+State 95
+
+   31 sentencia: '@' condicion •
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    AND  shift, and go to state 124
+    OR   shift, and go to state 125
+    NEQ  shift, and go to state 126
+    EQ   shift, and go to state 127
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+
+    $default  reduce using rule 31 (sentencia)
+
+
+State 96
+
+   16 main: MAIN $@2 '(' ')' '{' sentencias '}' •
+
+    $default  reduce using rule 16 (main)
+
+
+State 97
+
+   17 sentencias: sentencia ';' • sentencias
+   18           | sentencia ';' •
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    $default  reduce using rule 18 (sentencias)
+
+    sentencias  go to state 132
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 98
+
+   19 sentencias: estructura sentencias •
+
+    $default  reduce using rule 19 (sentencias)
+
+
+State 99
+
+   11 funcion: IDENTIF $@1 '(' parametros ')' '{' sentencias '}' •
+
+    $default  reduce using rule 11 (funcion)
+
+
+State 100
+
+   62 parametros_extra: expresion ',' • parametros_extra
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion         go to state 76
+    parametros_extra  go to state 133
+    termino           go to state 45
+    operando          go to state 33
+
+
+State 101
+
+   59 expresion: IDENTIF '(' parametros_extra ')' •
+
+    $default  reduce using rule 59 (expresion)
+
+
+State 102
+
+   61 expresion: IDENTIF '[' expresion ']' •
+
+    $default  reduce using rule 61 (expresion)
+
+
+State 103
+
+   23 sentencia: IDENTIF '=' expresion •
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 23 (sentencia)
+
+
+State 104
+
+   28 sentencia: IDENTIF '(' ')' •
+
+    $default  reduce using rule 28 (sentencia)
+
+
+State 105
+
+   27 sentencia: IDENTIF '(' parametros_extra • ')'
+
+    ')'  shift, and go to state 134
+
+
+State 106
+
+   24 sentencia: IDENTIF '[' expresion • ']' '=' expresion
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+    ']'  shift, and go to state 135
+
+
+State 107
+
+   22 sentencia: INTEGER definicion ',' • definiciones
+
+    IDENTIF  shift, and go to state 12
+
+    definiciones  go to state 136
+    definicion    go to state 36
+
+
+State 108
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   64 condicion: expresion • AND expresion
+   65          | expresion • OR expresion
+   66          | expresion • NEQ expresion
+   67          | expresion • EQ expresion
+   68          | expresion • '<' expresion
+   69          | expresion • LEQ expresion
+   70          | expresion • '>' expresion
+   71          | expresion • GEQ expresion
+
+    AND  shift, and go to state 116
+    OR   shift, and go to state 117
+    NEQ  shift, and go to state 118
+    EQ   shift, and go to state 119
+    LEQ  shift, and go to state 120
+    GEQ  shift, and go to state 121
+    '<'  shift, and go to state 122
+    '>'  shift, and go to state 123
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+
+State 109
+
+   32 estructura: WHILE '(' condicion • ')' '{' sentencias '}'
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    AND  shift, and go to state 124
+    OR   shift, and go to state 125
+    NEQ  shift, and go to state 126
+    EQ   shift, and go to state 127
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+    ')'  shift, and go to state 137
+
+
+State 110
+
+   26 sentencia: PUTS '(' STRING • ')'
+
+    ')'  shift, and go to state 138
+
+
+State 111
+
+   25 sentencia: PRINTF '(' expresion • ',' expresiones_print ')'
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+    ','  shift, and go to state 139
+
+
+State 112
+
+   33 estructura: IF '(' condicion • ')' '{' sentencias_if '}'
+   34           | IF '(' condicion • ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}'
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    AND  shift, and go to state 124
+    OR   shift, and go to state 125
+    NEQ  shift, and go to state 126
+    EQ   shift, and go to state 127
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+    ')'  shift, and go to state 140
+
+
+State 113
+
+   42 contador_for: IDENTIF • '=' termino
+
+    '='  shift, and go to state 141
+
+
+State 114
+
+   40 contador_for: INTEGER • IDENTIF
+   41             | INTEGER • IDENTIF '=' termino
+
+    IDENTIF  shift, and go to state 142
+
+
+State 115
+
+   35 estructura: FOR '(' contador_for • ';' condicion ';' incremento_decremento ')' '{' sentencias '}'
+
+    ';'  shift, and go to state 143
+
+
+State 116
+
+   64 condicion: expresion AND • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 144
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 117
+
+   65 condicion: expresion OR • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 145
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 118
+
+   66 condicion: expresion NEQ • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 146
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 119
+
+   67 condicion: expresion EQ • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 147
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 120
+
+   69 condicion: expresion LEQ • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 148
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 121
+
+   71 condicion: expresion GEQ • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 149
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 122
+
+   68 condicion: expresion '<' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 150
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 123
+
+   70 condicion: expresion '>' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 151
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 124
+
+   72 condicion: condicion AND • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 152
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 125
+
+   73 condicion: condicion OR • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 153
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 126
+
+   74 condicion: condicion NEQ • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 154
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 127
+
+   75 condicion: condicion EQ • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 155
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 128
+
+   77 condicion: condicion LEQ • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 156
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 129
+
+   79 condicion: condicion GEQ • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 157
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 130
+
+   76 condicion: condicion '<' • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 158
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 131
+
+   78 condicion: condicion '>' • condicion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 159
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 132
+
+   17 sentencias: sentencia ';' sentencias •
+
+    $default  reduce using rule 17 (sentencias)
+
+
+State 133
+
+   62 parametros_extra: expresion ',' parametros_extra •
+
+    $default  reduce using rule 62 (parametros_extra)
+
+
+State 134
+
+   27 sentencia: IDENTIF '(' parametros_extra ')' •
+
+    $default  reduce using rule 27 (sentencia)
+
+
+State 135
+
+   24 sentencia: IDENTIF '[' expresion ']' • '=' expresion
+
+    '='  shift, and go to state 160
+
+
+State 136
+
+   22 sentencia: INTEGER definicion ',' definiciones •
+
+    $default  reduce using rule 22 (sentencia)
+
+
+State 137
+
+   32 estructura: WHILE '(' condicion ')' • '{' sentencias '}'
+
+    '{'  shift, and go to state 161
+
+
+State 138
+
+   26 sentencia: PUTS '(' STRING ')' •
+
+    $default  reduce using rule 26 (sentencia)
+
+
+State 139
+
+   25 sentencia: PRINTF '(' expresion ',' • expresiones_print ')'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresiones_print  go to state 162
+    expresion          go to state 163
+    termino            go to state 45
+    operando           go to state 33
+
+
+State 140
+
+   33 estructura: IF '(' condicion ')' • '{' sentencias_if '}'
+   34           | IF '(' condicion ')' • '{' sentencias_if '}' ELSE '{' sentencias_if '}'
+
+    '{'  shift, and go to state 164
+
+
+State 141
+
+   42 contador_for: IDENTIF '=' • termino
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 28
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    termino   go to state 165
+    operando  go to state 33
+
+
+State 142
+
+   40 contador_for: INTEGER IDENTIF •
+   41             | INTEGER IDENTIF • '=' termino
+
+    '='  shift, and go to state 166
+
+    $default  reduce using rule 40 (contador_for)
+
+
+State 143
+
+   35 estructura: FOR '(' contador_for ';' • condicion ';' incremento_decremento ')' '{' sentencias '}'
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 108
+    condicion  go to state 167
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 144
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   64 condicion: expresion AND expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 64 (condicion)
+
+
+State 145
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   65 condicion: expresion OR expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 65 (condicion)
+
+
+State 146
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   66 condicion: expresion NEQ expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 66 (condicion)
+
+
+State 147
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   67 condicion: expresion EQ expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 67 (condicion)
+
+
+State 148
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   69 condicion: expresion LEQ expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 69 (condicion)
+
+
+State 149
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   71 condicion: expresion GEQ expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 71 (condicion)
+
+
+State 150
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   68 condicion: expresion '<' expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 68 (condicion)
+
+
+State 151
+
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+   70 condicion: expresion '>' expresion •
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 70 (condicion)
+
+
+State 152
+
+   72 condicion: condicion • AND condicion
+   72          | condicion AND condicion •
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    NEQ  shift, and go to state 126
+    EQ   shift, and go to state 127
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+
+    $default  reduce using rule 72 (condicion)
+
+
+State 153
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   73          | condicion OR condicion •
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    AND  shift, and go to state 124
+    NEQ  shift, and go to state 126
+    EQ   shift, and go to state 127
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+
+    $default  reduce using rule 73 (condicion)
+
+
+State 154
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   74          | condicion NEQ condicion •
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+
+    $default  reduce using rule 74 (condicion)
+
+
+State 155
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   75          | condicion EQ condicion •
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+
+    $default  reduce using rule 75 (condicion)
+
+
+State 156
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   77          | condicion LEQ condicion •
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    $default  reduce using rule 77 (condicion)
+
+
+State 157
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+   79          | condicion GEQ condicion •
+
+    $default  reduce using rule 79 (condicion)
+
+
+State 158
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   76          | condicion '<' condicion •
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    $default  reduce using rule 76 (condicion)
+
+
+State 159
+
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   78          | condicion '>' condicion •
+   79          | condicion • GEQ condicion
+
+    $default  reduce using rule 78 (condicion)
+
+
+State 160
+
+   24 sentencia: IDENTIF '[' expresion ']' '=' • expresion
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresion  go to state 168
+    termino    go to state 45
+    operando   go to state 33
+
+
+State 161
+
+   32 estructura: WHILE '(' condicion ')' '{' • sentencias '}'
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    sentencias  go to state 169
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 162
+
+   25 sentencia: PRINTF '(' expresion ',' expresiones_print • ')'
+
+    ')'  shift, and go to state 170
+
+
+State 163
+
+   50 expresiones_print: expresion • ',' expresiones_print
+   51                  | expresion •
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+    ','  shift, and go to state 171
+
+    $default  reduce using rule 51 (expresiones_print)
+
+
+State 164
+
+   33 estructura: IF '(' condicion ')' '{' • sentencias_if '}'
+   34           | IF '(' condicion ')' '{' • sentencias_if '}' ELSE '{' sentencias_if '}'
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    sentencia      go to state 172
+    estructura     go to state 173
+    sentencias_if  go to state 174
+
+
+State 165
+
+   42 contador_for: IDENTIF '=' termino •
+
+    $default  reduce using rule 42 (contador_for)
+
+
+State 166
+
+   41 contador_for: INTEGER IDENTIF '=' • termino
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 28
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    termino   go to state 175
+    operando  go to state 33
+
+
+State 167
+
+   35 estructura: FOR '(' contador_for ';' condicion • ';' incremento_decremento ')' '{' sentencias '}'
+   72 condicion: condicion • AND condicion
+   73          | condicion • OR condicion
+   74          | condicion • NEQ condicion
+   75          | condicion • EQ condicion
+   76          | condicion • '<' condicion
+   77          | condicion • LEQ condicion
+   78          | condicion • '>' condicion
+   79          | condicion • GEQ condicion
+
+    AND  shift, and go to state 124
+    OR   shift, and go to state 125
+    NEQ  shift, and go to state 126
+    EQ   shift, and go to state 127
+    LEQ  shift, and go to state 128
+    GEQ  shift, and go to state 129
+    '<'  shift, and go to state 130
+    '>'  shift, and go to state 131
+    ';'  shift, and go to state 176
+
+
+State 168
+
+   24 sentencia: IDENTIF '[' expresion ']' '=' expresion •
+   53 expresion: expresion • '+' expresion
+   54          | expresion • '-' expresion
+   55          | expresion • '*' expresion
+   56          | expresion • '/' expresion
+   57          | expresion • '%' expresion
+
+    '+'  shift, and go to state 54
+    '-'  shift, and go to state 55
+    '*'  shift, and go to state 56
+    '/'  shift, and go to state 57
+    '%'  shift, and go to state 58
+
+    $default  reduce using rule 24 (sentencia)
+
+
+State 169
+
+   32 estructura: WHILE '(' condicion ')' '{' sentencias • '}'
+
+    '}'  shift, and go to state 177
+
+
+State 170
+
+   25 sentencia: PRINTF '(' expresion ',' expresiones_print ')' •
+
+    $default  reduce using rule 25 (sentencia)
+
+
+State 171
+
+   50 expresiones_print: expresion ',' • expresiones_print
+
+    NUMBER   shift, and go to state 27
+    IDENTIF  shift, and go to state 42
+    STRING   shift, and go to state 43
+    '+'      shift, and go to state 29
+    '-'      shift, and go to state 30
+    '('      shift, and go to state 31
+
+    expresiones_print  go to state 178
+    expresion          go to state 163
+    termino            go to state 45
+    operando           go to state 33
+
+
+State 172
+
+   36 sentencias_if: sentencia • ';'
+   38              | sentencia • ';' sentencias
+
+    ';'  shift, and go to state 179
+
+
+State 173
+
+   37 sentencias_if: estructura •
+   39              | estructura • sentencias
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    $default  reduce using rule 37 (sentencias_if)
+
+    sentencias  go to state 180
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 174
+
+   33 estructura: IF '(' condicion ')' '{' sentencias_if • '}'
+   34           | IF '(' condicion ')' '{' sentencias_if • '}' ELSE '{' sentencias_if '}'
+
+    '}'  shift, and go to state 181
+
+
+State 175
+
+   41 contador_for: INTEGER IDENTIF '=' termino •
+
+    $default  reduce using rule 41 (contador_for)
+
+
+State 176
+
+   35 estructura: FOR '(' contador_for ';' condicion ';' • incremento_decremento ')' '{' sentencias '}'
+
+    IDENTIF  shift, and go to state 182
+
+    incremento_decremento  go to state 183
+
+
+State 177
+
+   32 estructura: WHILE '(' condicion ')' '{' sentencias '}' •
+
+    $default  reduce using rule 32 (estructura)
+
+
+State 178
+
+   50 expresiones_print: expresion ',' expresiones_print •
+
+    $default  reduce using rule 50 (expresiones_print)
+
+
+State 179
+
+   36 sentencias_if: sentencia ';' •
+   38              | sentencia ';' • sentencias
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    $default  reduce using rule 36 (sentencias_if)
+
+    sentencias  go to state 184
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 180
+
+   39 sentencias_if: estructura sentencias •
+
+    $default  reduce using rule 39 (sentencias_if)
+
+
+State 181
+
+   33 estructura: IF '(' condicion ')' '{' sentencias_if '}' •
+   34           | IF '(' condicion ')' '{' sentencias_if '}' • ELSE '{' sentencias_if '}'
+
+    ELSE  shift, and go to state 185
+
+    $default  reduce using rule 33 (estructura)
+
+
+State 182
+
+   43 incremento_decremento: IDENTIF • '=' IDENTIF '+' NUMBER
+   44                      | IDENTIF • '=' IDENTIF '-' NUMBER
+
+    '='  shift, and go to state 186
+
+
+State 183
+
+   35 estructura: FOR '(' contador_for ';' condicion ';' incremento_decremento • ')' '{' sentencias '}'
+
+    ')'  shift, and go to state 187
+
+
+State 184
+
+   38 sentencias_if: sentencia ';' sentencias •
+
+    $default  reduce using rule 38 (sentencias_if)
+
+
+State 185
+
+   34 estructura: IF '(' condicion ')' '{' sentencias_if '}' ELSE • '{' sentencias_if '}'
+
+    '{'  shift, and go to state 188
+
+
+State 186
+
+   43 incremento_decremento: IDENTIF '=' • IDENTIF '+' NUMBER
+   44                      | IDENTIF '=' • IDENTIF '-' NUMBER
+
+    IDENTIF  shift, and go to state 189
+
+
+State 187
+
+   35 estructura: FOR '(' contador_for ';' condicion ';' incremento_decremento ')' • '{' sentencias '}'
+
+    '{'  shift, and go to state 190
+
+
+State 188
+
+   34 estructura: IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' • sentencias_if '}'
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    sentencia      go to state 172
+    estructura     go to state 173
+    sentencias_if  go to state 191
+
+
+State 189
+
+   43 incremento_decremento: IDENTIF '=' IDENTIF • '+' NUMBER
+   44                      | IDENTIF '=' IDENTIF • '-' NUMBER
+
+    '+'  shift, and go to state 192
+    '-'  shift, and go to state 193
+
+
+State 190
+
+   35 estructura: FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' • sentencias '}'
+
+    IDENTIF  shift, and go to state 61
+    INTEGER  shift, and go to state 62
+    WHILE    shift, and go to state 63
+    PUTS     shift, and go to state 64
+    PRINTF   shift, and go to state 65
+    IF       shift, and go to state 66
+    FOR      shift, and go to state 67
+    RETURN   shift, and go to state 68
+    '@'      shift, and go to state 69
+
+    sentencias  go to state 194
+    sentencia   go to state 71
+    estructura  go to state 72
+
+
+State 191
+
+   34 estructura: IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if • '}'
+
+    '}'  shift, and go to state 195
+
+
+State 192
+
+   43 incremento_decremento: IDENTIF '=' IDENTIF '+' • NUMBER
+
+    NUMBER  shift, and go to state 196
+
+
+State 193
+
+   44 incremento_decremento: IDENTIF '=' IDENTIF '-' • NUMBER
+
+    NUMBER  shift, and go to state 197
+
+
+State 194
+
+   35 estructura: FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias • '}'
+
+    '}'  shift, and go to state 198
+
+
+State 195
+
+   34 estructura: IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}' •
+
+    $default  reduce using rule 34 (estructura)
+
+
+State 196
+
+   43 incremento_decremento: IDENTIF '=' IDENTIF '+' NUMBER •
+
+    $default  reduce using rule 43 (incremento_decremento)
+
+
+State 197
+
+   44 incremento_decremento: IDENTIF '=' IDENTIF '-' NUMBER •
+
+    $default  reduce using rule 44 (incremento_decremento)
+
+
+State 198
+
+   35 estructura: FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}' •
+
+    $default  reduce using rule 35 (estructura)

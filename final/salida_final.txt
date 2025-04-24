@@ -1,0 +1,20 @@
+variable fibonacci_retorno
+: fibonacci ( a b n  -- retorno )
+0 fibonacci_retorno !
+n @ 2 < if b @ fibonacci_retorno !
+fibonacci b @ a @ b @ + n @ 1 - fibonacci_retorno ! then
+fibonacci_retorno @ ;
+: main
+variable main_resultado
+0 main_resultado !
+variable main_i
+0 main_i !
+." Sucesion de Fibonacci" cr
+0 main_i !
+begin main_i @ 47 < while fibonacci 0 1 main_i @ main_resultado !
+main_i @ .
+."  " cr
+main_resultado @ .
+."  " cr
+main_i @ 1 + main_i ! repeat ;
+main
