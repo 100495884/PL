@@ -613,17 +613,17 @@ static const yytype_int8 yytranslate[] =
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
-static const yytype_int16 yyrline[] =
+static const yytype_uint8 yyrline[] =
 {
        0,   106,   106,   109,   110,   114,   115,   118,   119,   123,
-     124,   127,   127,   133,   135,   137,   141,   141,   145,   147,
-     149,   151,   154,   156,   158,   161,   164,   166,   168,   170,
-     172,   177,   179,   181,   183,   188,   191,   192,   194,   198,
-     200,   202,   207,   210,   216,   218,   222,   225,   228,   234,
-     236,   241,   242,   244,   246,   248,   250,   252,   254,   256,
-     258,   264,   266,   271,   273,   275,   277,   279,   281,   283,
-     285,   287,   289,   291,   293,   295,   297,   299,   301,   306,
-     307,   309,   314,   317,   319
+     124,   127,   127,   132,   133,   134,   137,   137,   141,   142,
+     143,   144,   147,   148,   149,   151,   153,   154,   155,   156,
+     157,   161,   162,   163,   164,   167,   168,   169,   170,   173,
+     174,   175,   179,   181,   186,   187,   190,   191,   192,   196,
+     197,   201,   202,   203,   204,   205,   206,   207,   208,   209,
+     210,   215,   216,   220,   221,   222,   223,   224,   225,   226,
+     227,   228,   229,   230,   231,   232,   233,   234,   235,   239,
+     240,   241,   245,   246,   247
 };
 #endif
 
@@ -1318,583 +1318,511 @@ yyreduce:
     {
   case 2: /* axioma: programa_principal  */
 #line 106 "trad4.y"
-                                             { ; }
+                           { ; }
 #line 1323 "trad4.tab.c"
     break;
 
   case 3: /* programa_principal: variables funciones  */
 #line 109 "trad4.y"
-                                                    { ; }
+                                        { ; }
 #line 1329 "trad4.tab.c"
     break;
 
   case 4: /* programa_principal: funciones  */
 #line 110 "trad4.y"
-                                          { ; }
+                { ; }
 #line 1335 "trad4.tab.c"
     break;
 
   case 5: /* variables: variable variables  */
 #line 114 "trad4.y"
-                               { ; }
+                              { ; }
 #line 1341 "trad4.tab.c"
     break;
 
   case 6: /* variables: variable  */
 #line 115 "trad4.y"
-                               { ; }
+                   { ; }
 #line 1347 "trad4.tab.c"
     break;
 
   case 7: /* variable: INTEGER definicion ';'  */
 #line 118 "trad4.y"
-                                                    { printf ("(setq %s)\n", yyvsp[-1].code) ;  }
+                                 { printf ("(setq %s)\n", yyvsp[-1].code) ; }
 #line 1353 "trad4.tab.c"
     break;
 
   case 8: /* variable: INTEGER definicion ',' definiciones ';'  */
 #line 119 "trad4.y"
-                                                    { printf ("(setq %s) %s\n", yyvsp[-3].code, yyvsp[-1].code) ; }
+                                                  { printf ("(setq %s)\n%s\n", yyvsp[-3].code, yyvsp[-1].code) ; }
 #line 1359 "trad4.tab.c"
     break;
 
   case 9: /* funciones: funcion funciones  */
 #line 123 "trad4.y"
-                                { ; }
+                             { ; }
 #line 1365 "trad4.tab.c"
     break;
 
   case 10: /* funciones: main  */
 #line 124 "trad4.y"
-                                { ; }
+               { ; }
 #line 1371 "trad4.tab.c"
     break;
 
   case 11: /* $@1: %empty  */
 #line 127 "trad4.y"
-                   { sprintf (funcion_actual, "%s", yyvsp[0].code); }
+                 { sprintf (funcion_actual, "%s", yyvsp[0].code); }
 #line 1377 "trad4.tab.c"
     break;
 
   case 12: /* funcion: IDENTIF $@1 '(' parametros ')' '{' sentencias '}'  */
 #line 128 "trad4.y"
-                                                  { if (strcmp(yyvsp[-4].code, " ") != 0) { printf("(defun %s(%s) %s)\n", yyvsp[-7].code, yyvsp[-4].code, yyvsp[-1].code);
-							  } else { printf("(defun %s() %s)\n", yyvsp[-7].code, yyvsp[-1].code); }
-							  strcpy(funcion_actual, ""); }
-#line 1385 "trad4.tab.c"
+    { if (strcmp(yyvsp[-4].code, " ") != 0) { printf("(defun %s(%s) %s)\n", yyvsp[-7].code, yyvsp[-4].code, yyvsp[-1].code);
+	} else { printf("(defun %s() %s)\n", yyvsp[-7].code, yyvsp[-1].code); } strcpy(funcion_actual, ""); }
+#line 1384 "trad4.tab.c"
     break;
 
   case 13: /* parametros: INTEGER IDENTIF ',' parametros  */
-#line 133 "trad4.y"
-                                              { sprintf (temp, "%s %s", yyvsp[-2].code, yyvsp[0].code) ;
-                                                            yyval.code = gen_code(temp);}
-#line 1392 "trad4.tab.c"
+#line 132 "trad4.y"
+                                           { sprintf (temp, "%s %s", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code(temp) ; }
+#line 1390 "trad4.tab.c"
     break;
 
   case 14: /* parametros: INTEGER IDENTIF  */
-#line 135 "trad4.y"
-                                                          { sprintf (temp, "%s", yyvsp[0].code) ;
-                                                            yyval.code = gen_code(temp);}
-#line 1399 "trad4.tab.c"
+#line 133 "trad4.y"
+                      { sprintf (temp, "%s", yyvsp[0].code) ; yyval.code = gen_code(temp) ; }
+#line 1396 "trad4.tab.c"
     break;
 
   case 15: /* parametros: %empty  */
-#line 137 "trad4.y"
-                                                          { sprintf (temp, " ") ;
-                                                            yyval.code = gen_code(temp);}
-#line 1406 "trad4.tab.c"
+#line 134 "trad4.y"
+                   { sprintf (temp, " ") ; yyval.code = gen_code(temp) ; }
+#line 1402 "trad4.tab.c"
     break;
 
   case 16: /* $@2: %empty  */
-#line 141 "trad4.y"
-                  { sprintf (funcion_actual, "%s", yyvsp[0].code); }
-#line 1412 "trad4.tab.c"
+#line 137 "trad4.y"
+           { sprintf (funcion_actual, "%s", yyvsp[0].code); }
+#line 1408 "trad4.tab.c"
     break;
 
   case 17: /* main: MAIN $@2 '(' ')' '{' sentencias '}'  */
-#line 141 "trad4.y"
-                                                                                           { printf("(defun main() %s)\n", yyvsp[-1].code);}
-#line 1418 "trad4.tab.c"
+#line 137 "trad4.y"
+                                                                                   { printf("(defun main() %s)\n", yyvsp[-1].code) ; }
+#line 1414 "trad4.tab.c"
     break;
 
   case 18: /* sentencias: sentencia ';' sentencias  */
-#line 145 "trad4.y"
-                                         { sprintf(temp, "%s %s", yyvsp[-2].code, yyvsp[0].code);
-                                         yyval.code = gen_code(temp);}
-#line 1425 "trad4.tab.c"
+#line 141 "trad4.y"
+                                     { sprintf(temp, "%s\n%s", yyvsp[-2].code, yyvsp[0].code); yyval.code = gen_code(temp) ; }
+#line 1420 "trad4.tab.c"
     break;
 
   case 19: /* sentencias: sentencia ';'  */
-#line 147 "trad4.y"
-                                       { sprintf (temp, "%s", yyvsp[-1].code) ;
-                                         yyval.code = gen_code(temp);}
-#line 1432 "trad4.tab.c"
+#line 142 "trad4.y"
+                    { sprintf (temp, "%s\n", yyvsp[-1].code) ; yyval.code = gen_code(temp) ; }
+#line 1426 "trad4.tab.c"
     break;
 
   case 20: /* sentencias: estructura sentencias  */
-#line 149 "trad4.y"
-                                       { sprintf(temp, "%s %s", yyvsp[-1].code, yyvsp[0].code);
-                                         yyval.code = gen_code(temp);}
-#line 1439 "trad4.tab.c"
+#line 143 "trad4.y"
+                            { sprintf(temp, "%s\n%s", yyvsp[-1].code, yyvsp[0].code); yyval.code = gen_code(temp) ; }
+#line 1432 "trad4.tab.c"
     break;
 
   case 21: /* sentencias: estructura  */
-#line 151 "trad4.y"
-                                       { yyval = yyvsp[0]; }
-#line 1445 "trad4.tab.c"
+#line 144 "trad4.y"
+                 { yyval = yyvsp[0]; }
+#line 1438 "trad4.tab.c"
     break;
 
   case 22: /* sentencia: INTEGER definicion  */
-#line 154 "trad4.y"
-                                            { sprintf (temp, "(setq %s_%s)", funcion_actual, yyvsp[0].code) ;  
-                                           yyval.code = gen_code (temp) ; }
-#line 1452 "trad4.tab.c"
+#line 147 "trad4.y"
+                              { sprintf (temp, "(setq %s_%s)", funcion_actual, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1444 "trad4.tab.c"
     break;
 
   case 23: /* sentencia: INTEGER definicion ',' definiciones  */
-#line 156 "trad4.y"
-                                                         { sprintf (temp, "(setq %s_%s) %s", funcion_actual, yyvsp[-2].code, yyvsp[0].code) ;  
-                                           	    yyval.code = gen_code (temp) ; }
-#line 1459 "trad4.tab.c"
+#line 148 "trad4.y"
+                                              { sprintf (temp, "(setq %s_%s) %s", funcion_actual, yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1450 "trad4.tab.c"
     break;
 
   case 24: /* sentencia: IDENTIF '=' expresion  */
-#line 158 "trad4.y"
-                                             { if (variable_local(yyvsp[-2].code)) { sprintf (temp, "(setf %s_%s %s)", funcion_actual, yyvsp[-2].code, yyvsp[0].code);
-					   } else { sprintf (temp, "(setf %s %s)", yyvsp[-2].code, yyvsp[0].code); }
-                                           yyval.code = gen_code (temp) ; }
-#line 1467 "trad4.tab.c"
+#line 149 "trad4.y"
+                                { if (variable_local(yyvsp[-2].code)) { sprintf (temp, "(setf %s_%s %s)", funcion_actual, yyvsp[-2].code, yyvsp[0].code);
+	} else { sprintf (temp, "(setf %s %s)", yyvsp[-2].code, yyvsp[0].code); } yyval.code = gen_code (temp) ; }
+#line 1457 "trad4.tab.c"
     break;
 
   case 25: /* sentencia: IDENTIF '[' expresion ']' '=' expresion  */
-#line 161 "trad4.y"
-                                                      { if (variable_local(yyvsp[-5].code)) { sprintf (temp, "(setf (aref %s_%s %s) %s)", funcion_actual, yyvsp[-5].code, yyvsp[-3].code, yyvsp[0].code);
-            						} else { sprintf (temp, "(setf (aref %s %s) %s)", yyvsp[-5].code, yyvsp[-3].code, yyvsp[0].code); }
-                                           		yyval.code = gen_code (temp) ; }
-#line 1475 "trad4.tab.c"
+#line 151 "trad4.y"
+                                              { if (variable_local(yyvsp[-5].code)) { sprintf (temp, "(setf (aref %s_%s %s) %s)", funcion_actual, yyvsp[-5].code, yyvsp[-3].code, yyvsp[0].code);
+    } else { sprintf (temp, "(setf (aref %s %s) %s)", yyvsp[-5].code, yyvsp[-3].code, yyvsp[0].code); } yyval.code = gen_code (temp) ; }
+#line 1464 "trad4.tab.c"
     break;
 
   case 26: /* sentencia: PRINTF '(' expresion ',' expresiones_print ')'  */
-#line 164 "trad4.y"
-                                                                  { sprintf (temp, "%s", yyvsp[-1].code) ;  
-                                           yyval.code = gen_code (temp) ; }
-#line 1482 "trad4.tab.c"
+#line 153 "trad4.y"
+                                                     { sprintf (temp, "%s", yyvsp[-1].code) ; yyval.code = gen_code (temp) ; }
+#line 1470 "trad4.tab.c"
     break;
 
   case 27: /* sentencia: PUTS '(' STRING ')'  */
-#line 166 "trad4.y"
-                                         { sprintf (temp, "(print \"%s\")", yyvsp[-1].code) ;  
-                                           yyval.code = gen_code (temp) ; }
-#line 1489 "trad4.tab.c"
+#line 154 "trad4.y"
+                          { sprintf (temp, "(print \"%s\")", yyvsp[-1].code) ; yyval.code = gen_code (temp) ; }
+#line 1476 "trad4.tab.c"
     break;
 
   case 28: /* sentencia: IDENTIF '(' parametros_extra ')'  */
-#line 168 "trad4.y"
-                                                   { sprintf (temp, "(%s %s)", yyvsp[-3].code, yyvsp[-1].code);
-                                                     yyval.code = gen_code (temp) ; }
-#line 1496 "trad4.tab.c"
+#line 155 "trad4.y"
+                                       { sprintf (temp, "(%s %s)", yyvsp[-3].code, yyvsp[-1].code); yyval.code = gen_code (temp) ; }
+#line 1482 "trad4.tab.c"
     break;
 
   case 29: /* sentencia: IDENTIF '(' ')'  */
-#line 170 "trad4.y"
-                                         { sprintf (temp, "(%s)", yyvsp[-2].code) ;
-                                	   yyval.code = gen_code (temp) ; }
-#line 1503 "trad4.tab.c"
+#line 156 "trad4.y"
+                          { sprintf (temp, "(%s)", yyvsp[-2].code) ; yyval.code = gen_code (temp) ; }
+#line 1488 "trad4.tab.c"
     break;
 
   case 30: /* sentencia: RETURN expresion  */
-#line 172 "trad4.y"
-                                         { sprintf(temp, "(return-from %s %s)", funcion_actual, yyvsp[0].code);
-                            		   yyval.code = gen_code(temp);}
-#line 1510 "trad4.tab.c"
+#line 157 "trad4.y"
+                       { sprintf(temp, "(return-from %s %s)", funcion_actual, yyvsp[0].code); yyval.code = gen_code(temp) ; }
+#line 1494 "trad4.tab.c"
     break;
 
   case 31: /* estructura: WHILE '(' condicion ')' '{' sentencias '}'  */
-#line 177 "trad4.y"
-                                                           { sprintf(temp, "(loop while %s do %s)", yyvsp[-4].code, yyvsp[-1].code);
-                                                               yyval.code = gen_code(temp);}
-#line 1517 "trad4.tab.c"
+#line 161 "trad4.y"
+                                                       { sprintf(temp, "(loop while %s do\n%s)\n", yyvsp[-4].code, yyvsp[-1].code); yyval.code = gen_code(temp) ; }
+#line 1500 "trad4.tab.c"
     break;
 
   case 32: /* estructura: IF '(' condicion ')' '{' sentencias_if '}'  */
-#line 179 "trad4.y"
-                                                           { sprintf(temp, "(if %s %s)", yyvsp[-4].code, yyvsp[-1].code);
-                                                               yyval.code = gen_code(temp);}
-#line 1524 "trad4.tab.c"
+#line 162 "trad4.y"
+                                                 { sprintf(temp, "(if %s\n%s)\n", yyvsp[-4].code, yyvsp[-1].code); yyval.code = gen_code(temp) ; }
+#line 1506 "trad4.tab.c"
     break;
 
   case 33: /* estructura: IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}'  */
-#line 181 "trad4.y"
-                                                                                        { sprintf(temp, "(if %s %s %s)", yyvsp[-8].code, yyvsp[-5].code, yyvsp[-1].code);
-                                                                                            yyval.code = gen_code(temp);}
-#line 1531 "trad4.tab.c"
+#line 163 "trad4.y"
+                                                                            { sprintf(temp, "(if %s\n%s\n%s)\n", yyvsp[-8].code, yyvsp[-5].code, yyvsp[-1].code); yyval.code = gen_code(temp) ; }
+#line 1512 "trad4.tab.c"
     break;
 
   case 34: /* estructura: FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}'  */
-#line 183 "trad4.y"
-                                                                                                  { sprintf(temp, "%s (loop while %s do %s %s)", yyvsp[-8].code,
-                                                                                    yyvsp[-6].code, yyvsp[-1].code, yyvsp[-4].code) ;
-                                                                                    yyval.code = gen_code (temp) ; }
-#line 1539 "trad4.tab.c"
+#line 164 "trad4.y"
+                                                                                          { sprintf(temp, "%s\n(loop while %s do\n%s\n%s)\n", yyvsp[-8].code, yyvsp[-6].code, yyvsp[-1].code, yyvsp[-4].code) ; yyval.code = gen_code (temp) ; }
+#line 1518 "trad4.tab.c"
     break;
 
   case 35: /* sentencias_if: sentencia ';'  */
-#line 188 "trad4.y"
-                                { if (leer_parentesis(yyvsp[-1].code)) { sprintf (temp, "(progn %s)", yyvsp[-1].code) ;
-				  } else { sprintf (temp, "%s", yyvsp[-1].code) ; }
-                                  yyval.code = gen_code (temp) ; }
-#line 1547 "trad4.tab.c"
+#line 167 "trad4.y"
+                             { if (leer_parentesis(yyvsp[-1].code)) { sprintf (temp, "(progn %s)", yyvsp[-1].code) ; } else { sprintf (temp, "%s", yyvsp[-1].code) ; } yyval.code = gen_code (temp) ; }
+#line 1524 "trad4.tab.c"
     break;
 
   case 36: /* sentencias_if: estructura  */
-#line 191 "trad4.y"
-                                { yyval = yyvsp[0]; }
-#line 1553 "trad4.tab.c"
+#line 168 "trad4.y"
+                 { yyval = yyvsp[0]; }
+#line 1530 "trad4.tab.c"
     break;
 
   case 37: /* sentencias_if: sentencia ';' sentencias  */
-#line 192 "trad4.y"
-                                            { sprintf (temp, "(progn %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                	      yyval.code = gen_code (temp) ; }
-#line 1560 "trad4.tab.c"
+#line 169 "trad4.y"
+                               { sprintf (temp, "(progn %s %s)", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1536 "trad4.tab.c"
     break;
 
   case 38: /* sentencias_if: estructura sentencias  */
-#line 194 "trad4.y"
-                                            { sprintf (temp, "(progn %s %s)", yyvsp[-1].code, yyvsp[0].code) ;
-                                                yyval.code = gen_code (temp) ; }
-#line 1567 "trad4.tab.c"
+#line 170 "trad4.y"
+                                { sprintf (temp, "(progn %s %s)", yyvsp[-1].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1542 "trad4.tab.c"
     break;
 
   case 39: /* contador_for: INTEGER IDENTIF  */
-#line 198 "trad4.y"
-                                  { sprintf (temp, "(setq %s_%s 0)", funcion_actual, yyvsp[0].code) ;
-                                 yyval.code = gen_code (temp) ; }
-#line 1574 "trad4.tab.c"
+#line 173 "trad4.y"
+                              { sprintf (temp, "(setq %s_%s 0)", funcion_actual, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1548 "trad4.tab.c"
     break;
 
   case 40: /* contador_for: INTEGER IDENTIF '=' termino  */
-#line 200 "trad4.y"
-                                          { sprintf (temp, "(setq %s_%s %s)", funcion_actual, yyvsp[-2].code, yyvsp[0].code) ;
-                                            yyval.code = gen_code (temp) ; }
-#line 1581 "trad4.tab.c"
+#line 174 "trad4.y"
+                                  { sprintf (temp, "(setq %s_%s %s)", funcion_actual, yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1554 "trad4.tab.c"
     break;
 
   case 41: /* contador_for: IDENTIF '=' termino  */
-#line 202 "trad4.y"
-                                      { if (variable_local(yyvsp[-2].code)) { sprintf (temp, "(setf %s_%s %s)", funcion_actual, yyvsp[-2].code, yyvsp[0].code);
-         				} else { sprintf (temp, "(setf %s %s)", yyvsp[-2].code, yyvsp[0].code); }
-                                        yyval.code = gen_code (temp) ; }
-#line 1589 "trad4.tab.c"
+#line 175 "trad4.y"
+                          { if (variable_local(yyvsp[-2].code)) { sprintf (temp, "(setf %s_%s %s)", funcion_actual, yyvsp[-2].code, yyvsp[0].code);
+    } else { sprintf (temp, "(setf %s %s)", yyvsp[-2].code, yyvsp[0].code); } yyval.code = gen_code (temp) ; }
+#line 1561 "trad4.tab.c"
     break;
 
   case 42: /* incremento_decremento: IDENTIF '=' IDENTIF '+' NUMBER  */
-#line 207 "trad4.y"
+#line 179 "trad4.y"
                                                       { if (variable_local(yyvsp[-4].code)) { sprintf (temp, "(setf %s_%s (+ %s_%s %d))", funcion_actual, yyvsp[-4].code, funcion_actual, yyvsp[-2].code, yyvsp[0].value);
-					 } else { sprintf (temp, "(setf %s (+ %s %d))", yyvsp[-4].code, yyvsp[-2].code, yyvsp[0].value); }
-                                         yyval.code = gen_code (temp) ; }
-#line 1597 "trad4.tab.c"
+	} else { sprintf (temp, "(setf %s (+ %s %d))", yyvsp[-4].code, yyvsp[-2].code, yyvsp[0].value); } yyval.code = gen_code (temp) ; }
+#line 1568 "trad4.tab.c"
     break;
 
   case 43: /* incremento_decremento: IDENTIF '=' IDENTIF '-' NUMBER  */
-#line 210 "trad4.y"
-                                       { if (variable_local(yyvsp[-4].code)) { sprintf (temp, "(setf %s_%s (- %s_%s %d))", funcion_actual, yyvsp[-4].code, funcion_actual, yyvsp[-2].code, yyvsp[0].value);
-      					 } else { sprintf (temp, "(setf %s (- %s %d))", yyvsp[-4].code, yyvsp[-2].code, yyvsp[0].value); }
-                                         yyval.code = gen_code (temp) ; }
-#line 1605 "trad4.tab.c"
+#line 181 "trad4.y"
+                                     { if (variable_local(yyvsp[-4].code)) { sprintf (temp, "(setf %s_%s (- %s_%s %d))", funcion_actual, yyvsp[-4].code, funcion_actual, yyvsp[-2].code, yyvsp[0].value);
+    } else { sprintf (temp, "(setf %s (- %s %d))", yyvsp[-4].code, yyvsp[-2].code, yyvsp[0].value); } yyval.code = gen_code (temp) ; }
+#line 1575 "trad4.tab.c"
     break;
 
   case 44: /* definiciones: definicion ',' definiciones  */
-#line 216 "trad4.y"
-                                           { sprintf (temp, "(setq %s) %s", yyvsp[-2].code, yyvsp[0].code) ; 
-                                           yyval.code = gen_code (temp) ; }
-#line 1612 "trad4.tab.c"
+#line 186 "trad4.y"
+                                          { sprintf (temp, "(setq %s)\n%s", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1581 "trad4.tab.c"
     break;
 
   case 45: /* definiciones: definicion  */
-#line 218 "trad4.y"
-                                                 { sprintf (temp, "(setq %s)", yyvsp[0].code) ;  
-                                           yyval.code = gen_code (temp) ; }
-#line 1619 "trad4.tab.c"
+#line 187 "trad4.y"
+                 { sprintf (temp, "(setq %s)\n", yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1587 "trad4.tab.c"
     break;
 
   case 46: /* definicion: IDENTIF '=' termino  */
-#line 222 "trad4.y"
-                                         { if (strcmp(funcion_actual, "") != 0) { add_symbol(yyvsp[-2].code, funcion_actual); }
-					   sprintf (temp, "%s %s", yyvsp[-2].code, yyvsp[0].code) ; 
-                                           yyval.code = gen_code (temp) ; }
-#line 1627 "trad4.tab.c"
+#line 190 "trad4.y"
+                                { if (strcmp(funcion_actual, "") != 0) { add_symbol(yyvsp[-2].code, funcion_actual); } sprintf (temp, "%s %s", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1593 "trad4.tab.c"
     break;
 
   case 47: /* definicion: IDENTIF  */
-#line 225 "trad4.y"
-                                         { if (strcmp(funcion_actual, "") != 0) { add_symbol(yyvsp[0].code, funcion_actual); }
-            				   sprintf (temp, "%s 0", yyvsp[0].code) ;  
-                                           yyval.code = gen_code (temp) ; }
-#line 1635 "trad4.tab.c"
+#line 191 "trad4.y"
+              { if (strcmp(funcion_actual, "") != 0) { add_symbol(yyvsp[0].code, funcion_actual); } sprintf (temp, "%s 0", yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1599 "trad4.tab.c"
     break;
 
   case 48: /* definicion: IDENTIF '[' NUMBER ']'  */
-#line 228 "trad4.y"
-                                         { if (strcmp(funcion_actual, "") != 0) { add_symbol(yyvsp[-3].code, funcion_actual); }
-            				   sprintf (temp, "%s (make-array %d)", yyvsp[-3].code, yyvsp[-1].value) ;  
-                                           yyval.code = gen_code (temp) ; }
-#line 1643 "trad4.tab.c"
+#line 192 "trad4.y"
+                             { if (strcmp(funcion_actual, "") != 0) { add_symbol(yyvsp[-3].code, funcion_actual); } sprintf (temp, "%s (make-array %d)", yyvsp[-3].code, yyvsp[-1].value) ; yyval.code = gen_code (temp) ; }
+#line 1605 "trad4.tab.c"
     break;
 
   case 49: /* expresiones_print: expresion ',' expresiones_print  */
-#line 234 "trad4.y"
-                                                     { sprintf (temp, "(princ %s) %s", yyvsp[-2].code, yyvsp[0].code); 
-						       yyval.code = gen_code (temp) ; }
-#line 1650 "trad4.tab.c"
+#line 196 "trad4.y"
+                                                   { sprintf (temp, "(princ %s)\n%s", yyvsp[-2].code, yyvsp[0].code); yyval.code = gen_code (temp) ; }
+#line 1611 "trad4.tab.c"
     break;
 
   case 50: /* expresiones_print: expresion  */
-#line 236 "trad4.y"
-                                             { sprintf (temp, "(princ %s)", yyvsp[0].code) ;  
-		                               yyval.code = gen_code (temp) ; }
-#line 1657 "trad4.tab.c"
+#line 197 "trad4.y"
+                    { sprintf (temp, "(princ %s)\n", yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1617 "trad4.tab.c"
     break;
 
   case 51: /* expresion: termino  */
-#line 241 "trad4.y"
-                                         { yyval = yyvsp[0] ; }
-#line 1663 "trad4.tab.c"
+#line 201 "trad4.y"
+                   { yyval = yyvsp[0] ; }
+#line 1623 "trad4.tab.c"
     break;
 
   case 52: /* expresion: expresion '+' expresion  */
-#line 242 "trad4.y"
-                                         { sprintf (temp, "(+ %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1670 "trad4.tab.c"
+#line 202 "trad4.y"
+                              { sprintf (temp, "(+ %s %s)", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1629 "trad4.tab.c"
     break;
 
   case 53: /* expresion: expresion '-' expresion  */
-#line 244 "trad4.y"
-                                         { sprintf (temp, "(- %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1677 "trad4.tab.c"
+#line 203 "trad4.y"
+                              { sprintf (temp, "(- %s %s)", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1635 "trad4.tab.c"
     break;
 
   case 54: /* expresion: expresion '*' expresion  */
-#line 246 "trad4.y"
-                                         { sprintf (temp, "(* %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1684 "trad4.tab.c"
+#line 204 "trad4.y"
+                              { sprintf (temp, "(* %s %s)", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1641 "trad4.tab.c"
     break;
 
   case 55: /* expresion: expresion '/' expresion  */
-#line 248 "trad4.y"
-                                         { sprintf (temp, "(/ %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1691 "trad4.tab.c"
+#line 205 "trad4.y"
+                              { sprintf (temp, "(/ %s %s)", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1647 "trad4.tab.c"
     break;
 
   case 56: /* expresion: expresion '%' expresion  */
-#line 250 "trad4.y"
-                                         { sprintf (temp, "(mod %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1698 "trad4.tab.c"
+#line 206 "trad4.y"
+                              { sprintf (temp, "(mod %s %s)", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1653 "trad4.tab.c"
     break;
 
   case 57: /* expresion: STRING  */
-#line 252 "trad4.y"
-                                         { sprintf (temp, "\"%s\"", yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1705 "trad4.tab.c"
+#line 207 "trad4.y"
+             { sprintf (temp, "\"%s\"", yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1659 "trad4.tab.c"
     break;
 
   case 58: /* expresion: IDENTIF '(' parametros_extra ')'  */
-#line 254 "trad4.y"
-                                                  { sprintf (temp, "(%s %s)", yyvsp[-3].code, yyvsp[-1].code) ;
-                                                    yyval.code = gen_code (temp) ; }
-#line 1712 "trad4.tab.c"
+#line 208 "trad4.y"
+                                        { sprintf (temp, "(%s %s)", yyvsp[-3].code, yyvsp[-1].code) ; yyval.code = gen_code (temp) ; }
+#line 1665 "trad4.tab.c"
     break;
 
   case 59: /* expresion: IDENTIF '(' ')'  */
-#line 256 "trad4.y"
-                                         { sprintf (temp, "(%s)", yyvsp[-2].code) ;
-                                	   yyval.code = gen_code (temp) ; }
-#line 1719 "trad4.tab.c"
+#line 209 "trad4.y"
+                      { sprintf (temp, "(%s)", yyvsp[-2].code) ; yyval.code = gen_code (temp) ; }
+#line 1671 "trad4.tab.c"
     break;
 
   case 60: /* expresion: IDENTIF '[' expresion ']'  */
-#line 258 "trad4.y"
-                                            { if (variable_local(yyvsp[-3].code)) { sprintf (temp, "(aref %s_%s %s)", funcion_actual, yyvsp[-3].code, yyvsp[-1].code);
-            				      } else { sprintf (temp, "(aref %s %s)", yyvsp[-3].code, yyvsp[-1].code); }
-                                              yyval.code = gen_code (temp) ; }
-#line 1727 "trad4.tab.c"
+#line 210 "trad4.y"
+                                { if (variable_local(yyvsp[-3].code)) { sprintf (temp, "(aref %s_%s %s)", funcion_actual, yyvsp[-3].code, yyvsp[-1].code);
+    } else { sprintf (temp, "(aref %s %s)", yyvsp[-3].code, yyvsp[-1].code); } yyval.code = gen_code (temp) ; }
+#line 1678 "trad4.tab.c"
     break;
 
   case 61: /* parametros_extra: expresion ',' parametros_extra  */
-#line 264 "trad4.y"
-                                                     { sprintf (temp, "%s %s", yyvsp[-2].code, yyvsp[0].code) ;
-                                                       yyval.code = gen_code(temp);}
-#line 1734 "trad4.tab.c"
+#line 215 "trad4.y"
+                                                 { sprintf (temp, "%s %s", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code(temp) ; }
+#line 1684 "trad4.tab.c"
     break;
 
   case 62: /* parametros_extra: expresion  */
-#line 266 "trad4.y"
-                                                     { sprintf (temp, "%s", yyvsp[0].code) ;
-                                                       yyval.code = gen_code(temp);}
-#line 1741 "trad4.tab.c"
+#line 216 "trad4.y"
+                { sprintf (temp, "%s", yyvsp[0].code) ; yyval.code = gen_code(temp) ; }
+#line 1690 "trad4.tab.c"
     break;
 
   case 63: /* condicion: expresion AND expresion  */
-#line 271 "trad4.y"
-                                       { sprintf (temp, "(and %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1748 "trad4.tab.c"
+#line 220 "trad4.y"
+                                   { sprintf (temp, "(and %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1696 "trad4.tab.c"
     break;
 
   case 64: /* condicion: expresion OR expresion  */
-#line 273 "trad4.y"
-                                        { sprintf (temp, "(or %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1755 "trad4.tab.c"
+#line 221 "trad4.y"
+                               { sprintf (temp, "(or %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1702 "trad4.tab.c"
     break;
 
   case 65: /* condicion: expresion NEQ expresion  */
-#line 275 "trad4.y"
-                                         { sprintf (temp, "(/= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1762 "trad4.tab.c"
+#line 222 "trad4.y"
+                                { sprintf (temp, "(/= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1708 "trad4.tab.c"
     break;
 
   case 66: /* condicion: expresion EQ expresion  */
-#line 277 "trad4.y"
-                                        { sprintf (temp, "(= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1769 "trad4.tab.c"
+#line 223 "trad4.y"
+                               { sprintf (temp, "(= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1714 "trad4.tab.c"
     break;
 
   case 67: /* condicion: expresion '<' expresion  */
-#line 279 "trad4.y"
-                                         { sprintf (temp, "(< %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1776 "trad4.tab.c"
+#line 224 "trad4.y"
+                                { sprintf (temp, "(< %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1720 "trad4.tab.c"
     break;
 
   case 68: /* condicion: expresion LEQ expresion  */
-#line 281 "trad4.y"
-                                         { sprintf (temp, "(<= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1783 "trad4.tab.c"
+#line 225 "trad4.y"
+                                { sprintf (temp, "(<= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1726 "trad4.tab.c"
     break;
 
   case 69: /* condicion: expresion '>' expresion  */
-#line 283 "trad4.y"
-                                         { sprintf (temp, "(> %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1790 "trad4.tab.c"
+#line 226 "trad4.y"
+                                { sprintf (temp, "(> %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1732 "trad4.tab.c"
     break;
 
   case 70: /* condicion: expresion GEQ expresion  */
-#line 285 "trad4.y"
-                                         { sprintf (temp, "(>= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1797 "trad4.tab.c"
+#line 227 "trad4.y"
+                                { sprintf (temp, "(>= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1738 "trad4.tab.c"
     break;
 
   case 71: /* condicion: condicion AND condicion  */
-#line 287 "trad4.y"
-                                         { sprintf (temp, "(and %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1804 "trad4.tab.c"
+#line 228 "trad4.y"
+                                { sprintf (temp, "(and %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1744 "trad4.tab.c"
     break;
 
   case 72: /* condicion: condicion OR condicion  */
-#line 289 "trad4.y"
-                                        { sprintf (temp, "(or %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1811 "trad4.tab.c"
+#line 229 "trad4.y"
+                               { sprintf (temp, "(or %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1750 "trad4.tab.c"
     break;
 
   case 73: /* condicion: condicion NEQ condicion  */
-#line 291 "trad4.y"
-                                         { sprintf (temp, "(/= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1818 "trad4.tab.c"
+#line 230 "trad4.y"
+                                { sprintf (temp, "(/= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1756 "trad4.tab.c"
     break;
 
   case 74: /* condicion: condicion EQ condicion  */
-#line 293 "trad4.y"
-                                        { sprintf (temp, "(= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1825 "trad4.tab.c"
+#line 231 "trad4.y"
+                               { sprintf (temp, "(= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1762 "trad4.tab.c"
     break;
 
   case 75: /* condicion: condicion '<' condicion  */
-#line 295 "trad4.y"
-                                         { sprintf (temp, "(< %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1832 "trad4.tab.c"
+#line 232 "trad4.y"
+                                { sprintf (temp, "(< %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1768 "trad4.tab.c"
     break;
 
   case 76: /* condicion: condicion LEQ condicion  */
-#line 297 "trad4.y"
-                                         { sprintf (temp, "(<= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1839 "trad4.tab.c"
+#line 233 "trad4.y"
+                                { sprintf (temp, "(<= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1774 "trad4.tab.c"
     break;
 
   case 77: /* condicion: condicion '>' condicion  */
-#line 299 "trad4.y"
-                                         { sprintf (temp, "(> %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1846 "trad4.tab.c"
+#line 234 "trad4.y"
+                                { sprintf (temp, "(> %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1780 "trad4.tab.c"
     break;
 
   case 78: /* condicion: condicion GEQ condicion  */
-#line 301 "trad4.y"
-                                         { sprintf (temp, "(>= %s %s)", yyvsp[-2].code, yyvsp[0].code) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1853 "trad4.tab.c"
+#line 235 "trad4.y"
+                                { sprintf (temp, "(>= %s %s)\n", yyvsp[-2].code, yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1786 "trad4.tab.c"
     break;
 
   case 79: /* termino: operando  */
-#line 306 "trad4.y"
-                                                   { yyval = yyvsp[0] ; }
-#line 1859 "trad4.tab.c"
+#line 239 "trad4.y"
+                  { yyval = yyvsp[0] ; }
+#line 1792 "trad4.tab.c"
     break;
 
   case 80: /* termino: '+' operando  */
-#line 307 "trad4.y"
-                                                   { sprintf (temp, "(+ %s)", yyvsp[0].code) ;
-                                                     yyval.code = gen_code (temp) ; }
-#line 1866 "trad4.tab.c"
+#line 240 "trad4.y"
+                                    { sprintf (temp, "(+ %s)", yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1798 "trad4.tab.c"
     break;
 
   case 81: /* termino: '-' operando  */
-#line 309 "trad4.y"
-                                                   { sprintf (temp, "(- %s)", yyvsp[0].code) ;
-                                                     yyval.code = gen_code (temp) ; }
-#line 1873 "trad4.tab.c"
+#line 241 "trad4.y"
+                                    { sprintf (temp, "(- %s)", yyvsp[0].code) ; yyval.code = gen_code (temp) ; }
+#line 1804 "trad4.tab.c"
     break;
 
   case 82: /* operando: IDENTIF  */
-#line 314 "trad4.y"
-                                         { if (variable_local(yyvsp[0].code)) { sprintf (temp, "%s_%s", funcion_actual, yyvsp[0].code);
-					   } else { sprintf (temp, "%s", yyvsp[0].code); }
-                                           yyval.code = gen_code (temp) ; }
-#line 1881 "trad4.tab.c"
+#line 245 "trad4.y"
+                  { if (variable_local(yyvsp[0].code)) { sprintf (temp, "%s_%s", funcion_actual, yyvsp[0].code); } else { sprintf (temp, "%s", yyvsp[0].code); } yyval.code = gen_code (temp) ; }
+#line 1810 "trad4.tab.c"
     break;
 
   case 83: /* operando: NUMBER  */
-#line 317 "trad4.y"
-                                         { sprintf (temp, "%d", yyvsp[0].value) ;
-                                           yyval.code = gen_code (temp) ; }
-#line 1888 "trad4.tab.c"
+#line 246 "trad4.y"
+             { sprintf (temp, "%d", yyvsp[0].value) ; yyval.code = gen_code (temp) ; }
+#line 1816 "trad4.tab.c"
     break;
 
   case 84: /* operando: '(' expresion ')'  */
-#line 319 "trad4.y"
-                                         { yyval = yyvsp[-1] ; }
-#line 1894 "trad4.tab.c"
+#line 247 "trad4.y"
+                        { yyval = yyvsp[-1] ; }
+#line 1822 "trad4.tab.c"
     break;
 
 
-#line 1898 "trad4.tab.c"
+#line 1826 "trad4.tab.c"
 
       default: break;
     }
@@ -2087,7 +2015,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 322 "trad4.y"
+#line 250 "trad4.y"
                             // SECCION 4    Codigo en C
 
 int n_line = 1 ;

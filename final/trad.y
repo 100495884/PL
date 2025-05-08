@@ -103,7 +103,7 @@ int leer_parentesis(char* my_string) {
 
 %%                            // Seccion 3 Gramatica - Semantico
 
-axioma: programa_principal { ; }
+axioma: programa_principal { /* No se imprime nada aquí */ }
 	;
 
 programa_principal: variables funciones { ; }
@@ -116,7 +116,7 @@ variables: variable variables { ; }
 	;
 	  
 variable: INTEGER definicion ';' { printf ("(setq %s)\n", $2.code) ; }
-	| INTEGER definicion ',' definiciones ';' { printf ("(setq %s) %s\n", $2.code, $4.code) ; }  
+	| INTEGER definicion ',' definiciones ';' { printf ("(setq %s)\n%s\n", $2.code, $4.code) ; }  
 	;
 
 /* Definición de las funciones */
@@ -134,13 +134,13 @@ parametros: INTEGER IDENTIF ',' parametros { sprintf (temp, "%s %s", $2.code, $4
     | /* lambda */ { sprintf (temp, " ") ; $$.code = gen_code(temp) ; }
     ;
 
-main: MAIN { sprintf (funcion_actual, "%s", $1.code); } '(' ')' '{' sentencias '}' { printf("(defun main() %s)\n", $6.code) ; }
+main: MAIN { sprintf (funcion_actual, "%s", $1.code); } '(' ')' '{' sentencias '}' { printf("(defun main() \n%s)\n", $6.code) ; }
 	;
 
 /* Sentencias para una función */
-sentencias: sentencia ';' sentencias { sprintf(temp, "%s %s", $1.code, $3.code); $$.code = gen_code(temp) ; }
+sentencias: sentencia ';' sentencias { sprintf(temp, "%s\n%s", $1.code, $3.code); $$.code = gen_code(temp) ; }
     | sentencia ';' { sprintf (temp, "%s", $1.code) ; $$.code = gen_code(temp) ; }
-    | estructura sentencias { sprintf(temp, "%s %s", $1.code, $2.code); $$.code = gen_code(temp) ; }
+    | estructura sentencias { sprintf(temp, "%s\n%s", $1.code, $2.code); $$.code = gen_code(temp) ; }
     | estructura { $$ = $1; }
 	;
 
@@ -158,10 +158,10 @@ sentencia: INTEGER definicion { sprintf (temp, "(setq %s_%s)", funcion_actual, $
     ;
 
 /* Estructuras  de bucles while y for, y condiciones if*/
-estructura: WHILE '(' condicion ')' '{' sentencias '}' { sprintf(temp, "(loop while %s do %s)", $3.code, $6.code); $$.code = gen_code(temp) ; }
-    | IF '(' condicion ')' '{' sentencias_if '}' { sprintf(temp, "(if %s %s)", $3.code, $6.code); $$.code = gen_code(temp) ; }
-    | IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}' { sprintf(temp, "(if %s %s %s)", $3.code, $6.code, $10.code); $$.code = gen_code(temp) ; }
-    | FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}' { sprintf(temp, "%s (loop while %s do %s %s)", $3.code, $5.code, $10.code, $7.code) ; $$.code = gen_code (temp) ; }
+estructura: WHILE '(' condicion ')' '{' sentencias '}' { sprintf(temp, "(loop while %s do%s)", $3.code, $6.code); $$.code = gen_code(temp) ; }
+    | IF '(' condicion ')' '{' sentencias_if '}' { sprintf(temp, "(if %s%s)", $3.code, $6.code); $$.code = gen_code(temp) ; }
+    | IF '(' condicion ')' '{' sentencias_if '}' ELSE '{' sentencias_if '}' { sprintf(temp, "(if %s%s\n%s)", $3.code, $6.code, $10.code); $$.code = gen_code(temp) ; }
+    | FOR '(' contador_for ';' condicion ';' incremento_decremento ')' '{' sentencias '}' { sprintf(temp, "%s(loop while %s do%s%s)", $3.code, $5.code, $10.code, $7.code) ; $$.code = gen_code (temp) ; }
     ;
 
 sentencias_if: sentencia ';' { if (leer_parentesis($1.code)) { sprintf (temp, "(progn %s)", $1.code) ; } else { sprintf (temp, "%s", $1.code) ; } $$.code = gen_code (temp) ; }
@@ -183,8 +183,8 @@ incremento_decremento: IDENTIF '=' IDENTIF '+' NUMBER { if (variable_local($1.co
     ;
 
 /* Definición de las variables */
-definiciones: definicion ',' definiciones { sprintf (temp, "(setq %s) %s", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    | definicion { sprintf (temp, "(setq %s)", $1.code) ; $$.code = gen_code (temp) ; }
+definiciones: definicion ',' definiciones { sprintf (temp, "(setq %s)\n%s", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    | definicion { sprintf (temp, "(setq %s)\n", $1.code) ; $$.code = gen_code (temp) ; }
     ;
 
 definicion: IDENTIF '=' termino	{ if (strcmp(funcion_actual, "") != 0) { add_symbol($1.code, funcion_actual); } sprintf (temp, "%s %s", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
@@ -193,7 +193,7 @@ definicion: IDENTIF '=' termino	{ if (strcmp(funcion_actual, "") != 0) { add_sym
     ;
          
 /* Para el correcto uso del printf */
-expresiones_print: expresion ',' expresiones_print { sprintf (temp, "(princ %s) %s", $1.code, $3.code); $$.code = gen_code (temp) ; }
+expresiones_print: expresion ',' expresiones_print { sprintf (temp, "(princ %s)\n%s", $1.code, $3.code); $$.code = gen_code (temp) ; }
 	| expresion { sprintf (temp, "(princ %s)", $1.code) ; $$.code = gen_code (temp) ; }
 	;
          
@@ -217,22 +217,22 @@ parametros_extra: expresion ',' parametros_extra { sprintf (temp, "%s %s", $1.co
     ;
 
 /* Expresiones de las condiciones */
-condicion: expresion AND expresion { sprintf (temp, "(and %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion OR expresion { sprintf (temp, "(or %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion NEQ expresion { sprintf (temp, "(/= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion EQ expresion { sprintf (temp, "(= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion '<' expresion { sprintf (temp, "(< %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion LEQ expresion { sprintf (temp, "(<= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion '>' expresion { sprintf (temp, "(> %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   expresion GEQ expresion { sprintf (temp, "(>= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion AND condicion { sprintf (temp, "(and %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion OR condicion { sprintf (temp, "(or %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion NEQ condicion { sprintf (temp, "(/= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion EQ condicion { sprintf (temp, "(= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion '<' condicion { sprintf (temp, "(< %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion LEQ condicion { sprintf (temp, "(<= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion '>' condicion { sprintf (temp, "(> %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
-    |   condicion GEQ condicion { sprintf (temp, "(>= %s %s)", $1.code, $3.code) ; $$.code = gen_code (temp) ; }          
+condicion: expresion AND expresion { sprintf (temp, "(and %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion OR expresion { sprintf (temp, "(or %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion NEQ expresion { sprintf (temp, "(/= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion EQ expresion { sprintf (temp, "(= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion '<' expresion { sprintf (temp, "(< %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion LEQ expresion { sprintf (temp, "(<= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion '>' expresion { sprintf (temp, "(> %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   expresion GEQ expresion { sprintf (temp, "(>= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion AND condicion { sprintf (temp, "(and %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion OR condicion { sprintf (temp, "(or %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion NEQ condicion { sprintf (temp, "(/= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion EQ condicion { sprintf (temp, "(= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion '<' condicion { sprintf (temp, "(< %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion LEQ condicion { sprintf (temp, "(<= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion '>' condicion { sprintf (temp, "(> %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }
+    |   condicion GEQ condicion { sprintf (temp, "(>= %s %s)\n", $1.code, $3.code) ; $$.code = gen_code (temp) ; }          
     ;
 
 /* Un termino puede ser un número, una variable, un incremento o un decremento */

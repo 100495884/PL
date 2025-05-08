@@ -1,3 +1,5 @@
+/* 406 Marcos Emigdio Ramírez Cerdán, Javier Moyano San Bruno*/
+/*100499744@alumnos.uc3m.es 100495884@alumnos.uc3m.es*/
 %{                          // SECCION 1 Declaraciones de C-Yacc
 
 #include <stdio.h>
@@ -5,14 +7,12 @@
 #include <string.h>           // declaraciones para cadenas
 #include <stdlib.h>           // declaraciones para exit ()
 
-#define FF fflush(stdout);    // para forzar la impresion inmediata
 
 int yylex () ;
 int yyerror () ;
-char *mi_malloc (int) ;
+char *my_malloc (int) ;
 char *gen_code (char *) ;
-char *int_to_string (int) ;
-char *char_to_string (char) ;
+
 
 char temp [2048] ;
 
@@ -23,12 +23,6 @@ typedef struct s_attr {
         char *code ;
 } t_attr ;
 
-// Tabla de símbolos para diferenciar entre variables locales y globales
-struct symbol {
-    char name[50];
-    char scope[50];
-};
-
 #define YYSTYPE t_attr
 
 %}
@@ -37,12 +31,9 @@ struct symbol {
 
 %token NUMBER        
 %token IDENTIF       // Identificador=variable
-%token INTEGER       // identifica el tipo entero
 %token STRING
-%token SETQ SETF DEFUN MAIN LOOP WHILE DO IF ELSE THEN PROGN
-%token PRINT PRIN1 AREF MOD AND OR NOT NEQ LEQ GEQ RETURN FROM
-
-
+%token SETQ DEFUN MAIN LOOP WHILE DO IF THEN PROGN
+%token PRINT MOD AND OR NOT NEQ LEQ GEQ
 
 %right '='                    // es la ultima operacion que se debe realizar
 %left OR
@@ -51,68 +42,46 @@ struct symbol {
 %left '<' '>' LEQ GEQ
 %left '+' '-'                 // menor orden de precedencia
 %left '*' '/'                 // orden de precedencia intermedio
-%left UNARY_SIGN              // mayor orden de precedencia
 
-%%                            // Seccion 3 Gramatica - Semantico
+%%                            // Seccion 2 Gramatica - Semantico
 
-axioma: programa_principal { ; };
+axioma: programa_principal { ; }
+    ;
 
 programa_principal: declaracion programa_principal { ; }
-    | funcion programa_principal { ; }
     | main_func programa_principal { ; }
     | /* lambda */ { ; }
     ;
 
-declaracion: '(' SETQ IDENTIF valor ')' { printf("variable %s\n%s %s !\n", $3.code, $4.code, $3.code); $$.code = gen_code(temp) ; }
-    | '(' SETQ IDENTIF '(' "make-arrayç" NUMBER ')' ')' { printf("variable %s\ncreate %s %s cells allot\n", $3.code, $3.code, $6.code) ; }
+declaracion: '(' SETQ IDENTIF valor ')' { printf("variable %s\n", $3.code); if (strlen($4.code) > 0) { printf("%s %s !\n", $4.code, $3.code); } }
     ;
 
-valor: NUMBER { sprintf(temp, "%d", $1.value); $$.code = gen_code(temp) ; }
-    | STRING { $$.code = $1.code; }
+valor: NUMBER { sprintf(temp, "%d", $1.value); $$.code = gen_code(temp); }
     ;
 
-funcion: '(' DEFUN IDENTIF '(' lista_parametros ')' cuerpo ')' { printf(": %s ( %s -- retorno )\n%s ;\n", $3.code, $5.code, $7.code); }
-    ;
-
-lista_parametros: /* lambda */ { $$.code = gen_code(""); }
-    | IDENTIF lista_parametros { sprintf(temp, "%s %s", $1.code, $2.code); $$.code = gen_code(temp); }
-    ;
-
-main_func: '(' DEFUN MAIN '(' ')' cuerpo ')' '(' MAIN ')' { printf(": main\n%s ;\nmain\n", $6.code) ; }
+main_func: '(' DEFUN MAIN '(' ')' cuerpo ')' '(' MAIN ')' { printf(": main\n%s ;\nmain\n", $6.code); }
     ;
 
 cuerpo: sentencias { $$.code = $1.code; }
     ;
 
-sentencias: sentencia sentencias { sprintf(temp, "%s\n%s", $1.code, $2.code); $$.code = gen_code(temp) ; }
+sentencias: sentencia sentencias { sprintf(temp, "%s\n%s", $1.code, $2.code); $$.code = gen_code(temp); }
     | sentencia { $$.code = $1.code; }
     ;
 
-sentencia: '(' SETQ IDENTIF expresion ')' { sprintf(temp, "variable %s\n%s %s !", $3.code, $4.code, $3.code); $$.code = gen_code(temp); }
-    | '(' SETF IDENTIF expresion ')' { sprintf(temp, "%s %s !", $4.code, $3.code); $$.code = gen_code(temp); }
-    | '(' SETF '(' AREF IDENTIF expresion ')' expresion ')' { sprintf(temp, "%s %s %s [] !", $8.code, $6.code, $5.code); $$.code = gen_code(temp); }
+sentencia: '(' SETQ IDENTIF expresion ')' { sprintf(temp, "%s %s !", $4.code, $3.code); $$.code = gen_code(temp); }
     | '(' PRINT STRING ')' { sprintf(temp, ".\" %s\" cr", $3.code); $$.code = gen_code(temp); }
-    | '(' PRIN1 expresion ')' { if ($3.code[0] == '"') { sprintf(temp, ".\" %s cr", $3.code + 1); temp[strlen(temp)] = '\0'; } else { sprintf(temp, "%s .", $3.code); } $$.code = gen_code(temp); }
-    | '(' RETURN '-' FROM IDENTIF expresion ')' { sprintf(temp, "%s", $6.code); $$.code = gen_code(temp); }
-    | llamada_funcion
-    | expresiones_loop
-    | expresiones_if
+    | '(' PRINT expresion ')' { sprintf(temp, "%s .", $3.code); $$.code = gen_code(temp); }
+    | expresiones_loop { $$.code = $1.code; }
+    | expresiones_if { $$.code = $1.code; }
     | '(' PROGN sentencias ')' { $$.code = $3.code; }
-    ;
-
-llamada_funcion: '(' IDENTIF ')' { sprintf(temp, "%s", $2.code); $$.code = gen_code(temp); }
-    | '(' IDENTIF lista_expresiones ')' { sprintf(temp, "%s %s", $2.code, $3.code); $$.code = gen_code(temp); }
-    ;
-
-lista_expresiones: expresion { $$.code = $1.code; }
-    | expresion lista_expresiones { sprintf(temp, "%s %s", $1.code, $2.code); $$.code = gen_code(temp); }
     ;
 
 expresiones_loop: '(' LOOP WHILE condicion DO sentencias ')' { sprintf(temp, "begin %s while %s repeat", $4.code, $6.code); $$.code = gen_code(temp); }
     ;
 
-expresiones_if: '(' IF condicion sentencias ')' { sprintf(temp, "%s if %s then", $3.code, $4.code); $$.code = gen_code(temp); }
-    | '(' IF condicion sentencias ELSE sentencias ')' { sprintf(temp, "%s if %s else %s then", $3.code, $4.code, $6.code); $$.code = gen_code(temp); }
+expresiones_if: '(' IF condicion sentencia ')' { sprintf(temp, "%s if %s then", $3.code, $4.code); $$.code = gen_code(temp); }
+    | '(' IF condicion sentencia sentencia ')' { sprintf(temp, "%s if %s else %s then", $3.code, $4.code, $5.code); $$.code = gen_code(temp); }
     ;
 
 condicion: expresion { $$.code = $1.code; }
@@ -120,16 +89,14 @@ condicion: expresion { $$.code = $1.code; }
 
 expresion: termino { $$.code = $1.code; }
     | expresiones_aritmeticas
-    | llamada_funcion
     | expresiones_logicas
     | expresiones_compuestas
-    | expresiones_array
     ;
 
 expresiones_aritmeticas: '(' '+' expresion expresion ')' { sprintf(temp, "%s %s +", $3.code, $4.code); $$.code = gen_code(temp); }
     | '(' '-' expresion expresion ')' { sprintf(temp, "%s %s -", $3.code, $4.code); $$.code = gen_code(temp); }
     | '(' '*' expresion expresion ')' { sprintf(temp, "%s %s *", $3.code, $4.code); $$.code = gen_code(temp); }
-    | '(' '/' expresion expresion ')' { sprintf(temp, "%s %s /", $2.code, $3.code); $$.code = gen_code(temp); }
+    | '(' '/' expresion expresion ')' { sprintf(temp, "%s %s /", $3.code, $4.code); $$.code = gen_code(temp); }
     | '(' MOD expresion expresion ')' { sprintf(temp, "%s %s mod", $3.code, $4.code); $$.code = gen_code(temp); }
     ;
 
@@ -146,15 +113,11 @@ expresiones_compuestas: '(' NEQ expresion expresion ')' { sprintf(temp, "%s %s <
     | '(' GEQ expresion expresion ')' { sprintf(temp, "%s %s >=", $3.code, $4.code); $$.code = gen_code(temp); }
     ;
 
-expresiones_array: '(' AREF IDENTIF expresion ')' { sprintf(temp, "%s %s [] @", $4.code, $3.code); $$.code = gen_code(temp); }
-    ;
-
 termino: IDENTIF { sprintf(temp, "%s @", $1.code); $$.code = gen_code(temp); }
     | NUMBER { sprintf(temp, "%d", $1.value); $$.code = gen_code(temp); }
-    | STRING { sprintf(temp, "\"%s\"", $1.code); $$.code = gen_code(temp); }
     ;
 
-%%                            // SECCION 4    Codigo en C
+%%                            // SECCION 3    Codigo en C
 
 int n_line = 1 ;
 
@@ -163,18 +126,6 @@ char *mensaje ;
 {
     fprintf (stderr, "%s en la linea %d\n", mensaje, n_line) ;
     printf ( "\n") ;	// bye
-}
-
-char *int_to_string (int n)
-{
-    sprintf (temp, "%d", n) ;
-    return gen_code (temp) ;
-}
-
-char *char_to_string (char c)
-{
-    sprintf (temp, "%c", c) ;
-    return gen_code (temp) ;
 }
 
 char *my_malloc (int nbytes)       // reserva n bytes de memoria dinamica
@@ -205,21 +156,19 @@ typedef struct s_keyword { // para las palabras reservadas de C
     int token ;
 } t_keyword ;
 
-t_keyword keywords [] = { // define las palabras reservadas y los
+t_keyword keywords [] = { // define las palabras reservadas y los tokens asociados
     "main",        MAIN,
     "defun",       DEFUN,
-    "princ",       PRIN1,  // princ es equivalente a prini en Forth (imprime sin salto)
+    "princ",       PRINT,
     "print",       PRINT,
     "setq",        SETQ,
-    "setf",        SETF,
+    "setf",        SETQ,
     "loop",        LOOP,
     "while",       WHILE,
     "do",          DO,
     "if",          IF,
-    "else",        ELSE,
     "then",        THEN,
     "progn",       PROGN,
-    "aref",        AREF,
     "mod",         MOD,
     "and",         AND,
     "or",          OR,
@@ -228,8 +177,6 @@ t_keyword keywords [] = { // define las palabras reservadas y los
     "=",           EQ,
     "<=",          LEQ,
     ">=",          GEQ,
-    "return",      RETURN,
-    "from",        FROM,
     NULL,          0
 } ;
 
